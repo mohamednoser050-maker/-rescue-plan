@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="خطة الإنقاذ" />
+  <title>خطة الإنقاذ — 83</title>
+
+  <!-- PWA Manifest & Icons (relative paths for GitHub Pages) -->
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS — Calm Sleek Dark Theme (100% Offline, Zero External CDN)
+    ========================================================================= */
+    :root {
+      --bg-base: #0b1120;
+      --bg-card: #111827;
+      --bg-elevated: #1e293b;
+      --bg-tile: #0f172a;
+
+      --border-crisp: #1f2937;
+      --border-hover: #334155;
+
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+
+      /* Pending / Draft State (Sky Blue Glow) */
+      --sky: #38bdf8;
+      --sky-light: #7dd3fc;
+      --sky-bg: rgba(56, 189, 248, 0.13);
+      --sky-border: rgba(56, 189, 248, 0.55);
+      --sky-glow: rgba(56, 189, 248, 0.18);
+
+      /* Locked / Confirmed State (Emerald) */
+      --emerald: #10b981;
+      --emerald-light: #34d399;
+      --emerald-bg: rgba(16, 185, 129, 0.12);
+      --emerald-border: rgba(16, 185, 129, 0.36);
+
+      /* Subject Accent Colors */
+      --subj-physics: #818cf8;    /* Indigo/Blue */
+      --subj-chemistry: #f59e0b;  /* Amber */
+      --subj-arabic: #22d3ee;     /* Cyan/Teal */
+      --subj-biology: #10b981;    /* Emerald */
+
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+
+      --font-sans: 'Cairo', 'Tajawal', 'Segoe UI', system-ui, -apple-system, Tahoma, sans-serif;
+    }
+
+    /* =========================================================================
+       BASE & RESET
+    ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      /* Space at bottom so sticky confirm bar never overlaps last lecture tiles */
+      padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button {
+      font-family: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--sky);
+      outline-offset: 2px;
+    }
+
+    .tabular {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+
+    /* =========================================================================
+       LAYOUT CONTAINER
+    ========================================================================= */
+    .app-shell {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 14px 28px;
+    }
+
+    @media (min-width: 640px) {
+      .app-shell {
+        padding: 22px 22px 36px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .app-shell {
+        padding: 28px 32px 44px;
+      }
+    }
+
+    /* =========================================================================
+       ULTRA-CLEAN HEADER & SELF-HIDING PWA BAR
+    ========================================================================= */
+    .app-header {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .app-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+      }
+    }
+
+    .header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .app-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+    }
+
+    .app-sub-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+    }
+
+    .countdown-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-base);
+      border: 1px solid var(--border-crisp);
+      border-radius: 999px;
+      padding: 3px 11px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .countdown-time {
+      color: var(--sky-light);
+      font-weight: 700;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    /* Container for the self-hiding PWA action buttons (auto-collapses when empty) */
+    .pwa-actions-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pwa-actions-wrap.is-empty {
+      display: none;
+    }
+
+    .pwa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+      font-weight: 700;
+      transition: transform 0.12s ease, filter 0.15s ease, background-color 0.15s ease;
+    }
+
+    .pwa-btn:active {
+      transform: scale(0.97);
+    }
+
+    .pwa-btn svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+
+    .pwa-btn--download {
+      background-color: var(--bg-elevated);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--sky-light);
+    }
+
+    .pwa-btn--download:hover {
+      background-color: rgba(56, 189, 248, 0.15);
+    }
+
+    .pwa-btn--install {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1px solid #34d399;
+      color: #03150e;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
+    }
+
+    .pwa-btn--install:hover {
+      filter: brightness(1.08);
+    }
+
+    /* =========================================================================
+       DASHBOARD METRICS GRID
+    ========================================================================= */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    @media (min-width: 560px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .metric-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-md);
+      padding: 15px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .metric-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .metric-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background-color: var(--bg-elevated);
+      color: var(--text-secondary);
+    }
+
+    .metric-badge--emerald {
+      background-color: var(--emerald-bg);
+      color: var(--emerald-light);
+      border: 1px solid var(--emerald-border);
+    }
+
+    .metric-badge--sky {
+      background-color: var(--sky-bg);
+      color: var(--sky-light);
+      border: 1px solid var(--sky-border);
+    }
+
+    .metric-value-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text-primary);
+    }
+
+    .metric-unit {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background-color: var(--bg-base);
+      border: 1px solid var(--border-crisp);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .progress-fill-locked {
+      height: 100%;
+      background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+      transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .progress-fill-pending {
+      height: 100%;
+      background-color: var(--sky);
+      transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .metric-foot {
+      padding-top: 8px;
+      border-top: 1px solid var(--border-crisp);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.77rem;
+      color: var(--text-secondary);
+    }
+
+    .metric-foot strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* =========================================================================
+       SUBJECT FILTER PILLS & STATE LEGEND
+    ========================================================================= */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+      margin-bottom: 16px;
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-crisp);
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    .filter-pill.is-active {
+      background-color: var(--bg-elevated);
+      border-color: var(--sky);
+      color: var(--text-primary);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.22);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .pill-mini-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: var(--bg-base);
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+
+    .filter-pill.is-active .pill-mini-count {
+      color: var(--sky-light);
+    }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-box {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* =========================================================================
+       SUBJECT CARDS & LECTURE TILES (3 VISUAL STATES)
+    ========================================================================= */
+    .subjects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .subject-section {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .subject-header {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--border-crisp);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .subject-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .subject-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subject-stripe {
+      width: 4px;
+      height: 20px;
+      border-radius: 999px;
+    }
+
+    .subject-name {
+      font-size: 1.06rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .subject-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .subject-stats strong {
+      color: var(--text-primary);
+    }
+
+    .subject-mini-bar {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background-color: var(--bg-base);
+      overflow: hidden;
+    }
+
+    .subject-mini-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .lectures-grid {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .lectures-grid {
+        padding: 16px 18px;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 11px;
+      }
+    }
+
+    /* State A: Unchecked (Default Dark Card) */
+    .lecture-card {
+      position: relative;
+      min-height: 78px;
+      padding: 10px 11px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-tile);
+      border: 1px solid var(--border-crisp);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 9px;
+      text-align: right;
+      user-select: none;
+      transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.12s ease;
+    }
+
+    .lecture-card:hover {
+      background-color: var(--bg-elevated);
+      border-color: var(--border-hover);
+    }
+
+    .lecture-card:active {
+      transform: scale(0.96);
+    }
+
+    /* State B: Pending / Draft (Glowing Sky Blue, freely toggleable) */
+    .lecture-card.is-pending {
+      background-color: var(--sky-bg);
+      border-color: var(--sky-border);
+      box-shadow: 0 0 0 1px var(--sky-glow), 0 4px 16px rgba(56, 189, 248, 0.14);
+    }
+
+    .lecture-card.is-pending:hover {
+      background-color: rgba(56, 189, 248, 0.19);
+      border-color: var(--sky);
+    }
+
+    /* State C: Locked / Confirmed (Green-tinted, permanently immutable) */
+    .lecture-card.is-locked {
+      background-color: var(--emerald-bg);
+      border-color: var(--emerald-border);
+      cursor: not-allowed;
+    }
+
+    .lecture-card.is-locked:hover {
+      background-color: rgba(16, 185, 129, 0.15);
+      border-color: var(--emerald-border);
+    }
+
+    .lecture-card.is-locked:active {
+      transform: none;
+    }
+
+    /* Subtle haptic-like horizontal shake for locked lecture tap */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    .lecture-card.is-shaking {
+      animation: gentleShake 0.34s ease;
+    }
+
+    .lecture-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .lecture-num {
+      font-size: 0.87rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .lecture-card.is-pending .lecture-num {
+      color: #e0f2fe;
+    }
+
+    .lecture-card.is-locked .lecture-num {
+      color: #d1fae5;
+    }
+
+    .lecture-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border-hover);
+      background-color: var(--bg-base);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .lecture-card.is-pending .lecture-check {
+      background-color: var(--sky);
+      border-color: var(--sky-light);
+      color: #041926;
+    }
+
+    .lecture-card.is-locked .lecture-check {
+      background-color: var(--emerald);
+      border-color: var(--emerald-light);
+      color: #03170f;
+    }
+
+    .lecture-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 20px;
+    }
+
+    .lecture-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .lecture-badge--idle {
+      padding: 0;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .lecture-badge--pending {
+      color: var(--sky-light);
+      background-color: rgba(56, 189, 248, 0.16);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .lecture-badge--locked {
+      color: var(--emerald-light);
+      background-color: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.32);
+    }
+
+    /* =========================================================================
+       ALWAYS-VISIBLE STICKY BOTTOM CONFIRMATION BAR
+    ========================================================================= */
+    .sticky-confirm-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-crisp);
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .sticky-confirm-inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-bar-btn {
+      width: 100%;
+      max-width: 560px;
+      min-height: 50px;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.96rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Calm muted state when 0 pending lectures */
+    .confirm-bar-btn--idle {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-hover);
+      color: var(--text-secondary);
+    }
+
+    .confirm-bar-btn--idle:hover {
+      background-color: #253349;
+      color: var(--text-primary);
+    }
+
+    /* Highlighted bright emerald state when >= 1 pending lectures */
+    .confirm-bar-btn--active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1px solid #34d399;
+      color: #03170f;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.32);
+    }
+
+    .confirm-bar-btn--active:hover {
+      filter: brightness(1.07);
+    }
+
+    .confirm-bar-btn:active {
+      transform: scale(0.985);
+    }
+
+    /* =========================================================================
+       CONFIRMATION REVIEW MODAL
+    ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      background-color: rgba(4, 8, 18, 0.84);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+      animation: fadeIn 0.16s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-dialog {
+      width: 100%;
+      max-width: 500px;
+      max-height: 88vh;
+      background-color: var(--bg-card);
+      border: 1px solid var(--emerald-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.72);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: popUp 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes popUp {
+      from { transform: translateY(12px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-crisp);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-date-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--emerald-light);
+      background-color: var(--emerald-bg);
+      border: 1px solid var(--emerald-border);
+      padding: 3px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-date-banner {
+      background-color: var(--bg-base);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .modal-date-banner strong {
+      color: var(--emerald-light);
+      font-weight: 800;
+    }
+
+    .pending-review-list {
+      background-color: var(--bg-base);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .pending-review-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-crisp);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .pending-review-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .modal-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--border-crisp);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    @media (min-width: 440px) {
+      .modal-actions {
+        flex-direction: row;
+      }
+    }
+
+    .modal-btn {
+      flex: 1;
+      min-height: 46px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 0.12s ease, filter 0.15s ease, background-color 0.15s ease;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.98);
+    }
+
+    .modal-btn--confirm {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1px solid #34d399;
+      color: #03170f;
+    }
+
+    .modal-btn--confirm:hover {
+      filter: brightness(1.07);
+    }
+
+    .modal-btn--cancel {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .modal-btn--cancel:hover {
+      background-color: #273549;
+    }
+
+    /* =========================================================================
+       SLEEK TOAST NOTIFICATION
+    ========================================================================= */
+    .toast-container {
+      position: fixed;
+      bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      max-width: calc(100vw - 28px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast-container.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-card {
+      background-color: #162033;
+      border: 1px solid var(--border-hover);
+      color: var(--text-primary);
+      padding: 11px 17px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.62);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .toast-card--locked {
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fde68a;
+    }
+
+    .toast-card--success {
+      border-color: var(--emerald-border);
+      color: #d1fae5;
+    }
+
+    .toast-card--info {
+      border-color: var(--sky-border);
+      color: #e0f2fe;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="header-title-row">
+          <h1 class="app-title">خطة الإنقاذ — 83</h1>
+        </div>
+        <div class="app-sub-meta">
+          <span id="egypt-date-text">--</span>
+          <span class="countdown-pill">
+            <span>منتصف الليل (مصر):</span>
+            <span id="midnight-countdown" class="countdown-time tabular">--:--:--</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Self-Hiding PWA Buttons (Auto-removed permanently once used / installed) -->
+      <div id="pwa-actions-wrap" class="pwa-actions-wrap is-empty">
+        <!-- Button A: Single Download All 4 PWA Files Button -->
+        <button id="pwa-download-all-btn" type="button" class="pwa-btn pwa-btn--download" style="display:none;">
+          <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>تحميل ملفات التثبيت (4 ملفات)</span>
+        </button>
+
+        <!-- Button B: Smart Native Install Button (Hidden by default until beforeinstallprompt) -->
+        <button id="pwa-install-btn" type="button" class="pwa-btn pwa-btn--install" style="display:none;">
+          <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+          </svg>
+          <span>تثبيت التطبيق</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== DASHBOARD METRICS ==================== -->
+    <section class="dashboard-grid" aria-label="ملخص الإنجاز">
+      <!-- Card 1: Overall Progress -->
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-label">الإنجاز الكلي</span>
+          <span id="metric-percent" class="metric-badge metric-badge--emerald tabular">0%</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="metric-confirmed" class="metric-value tabular">0</span>
+          <span class="metric-unit tabular">/ 83 مؤكد</span>
+          <span id="metric-pending-pill" class="metric-badge metric-badge--sky tabular" style="display:none;">+0 قيد التحديد</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="overall-progressbar">
+          <div id="progress-fill-locked" class="progress-fill-locked" style="width:0%;"></div>
+          <div id="progress-fill-pending" class="progress-fill-pending" style="width:0%;"></div>
+        </div>
+        <div class="metric-foot">
+          <span>المتبقي للإنهاء</span>
+          <strong id="metric-remaining" class="tabular">83 محاضرة</strong>
+        </div>
+      </article>
+
+      <!-- Card 2: Dynamic Daily Rate -->
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-label">المعدل اليومي المطلوب</span>
+          <span class="metric-badge">متغير تلقائياً</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="metric-daily-rate" class="metric-value tabular">--</span>
+          <span class="metric-unit">محاضرة / يوم</span>
+        </div>
+        <div class="metric-foot">
+          <span>الموعد النهائي</span>
+          <strong>31 ديسمبر 2026</strong>
+        </div>
+      </article>
+
+      <!-- Card 3: Remaining Days -->
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-label">الأيام المتبقية</span>
+          <span class="metric-badge">شامل اليوم</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="metric-days-left" class="metric-value tabular">--</span>
+          <span class="metric-unit">يوم متبقي</span>
+        </div>
+        <div class="metric-foot">
+          <span>توقيت الحساب</span>
+          <strong>القاهرة (مصر)</strong>
+        </div>
+      </article>
+
+      <!-- Card 4: Commitment Streak -->
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-label">سلسلة الالتزام</span>
+          <span class="metric-badge metric-badge--emerald">أيام مؤكدة</span>
+        </div>
+        <div class="metric-value-row">
+          <span id="metric-streak" class="metric-value tabular">0</span>
+          <span id="metric-streak-unit" class="metric-unit">يوم متتالي 🔥</span>
+        </div>
+        <div class="metric-foot">
+          <span>إجمالي أيام الإنجاز</span>
+          <strong id="metric-active-days" class="tabular">1 يوم</strong>
+        </div>
+      </article>
+    </section>
+
+    <!-- ==================== FILTER PILLS & LEGEND ==================== -->
+    <section class="filter-bar" aria-label="تصفية المواد">
+      <div id="filter-pills-wrap" class="filter-pills"></div>
+      <div class="legend-bar">
+        <span class="legend-chip">
+          <span class="legend-box" style="background-color:var(--sky);"></span>
+          <span>قيد التحديد (قابل للتعديل)</span>
+        </span>
+        <span class="legend-chip">
+          <span class="legend-box" style="background-color:var(--emerald);"></span>
+          <span>🔒 مؤكد نهائياً</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- ==================== SUBJECTS & LECTURE TILES ==================== -->
+    <main id="subjects-root" class="subjects-list" aria-label="المواد والمحاضرات"></main>
+
+  </div>
+
+  <!-- ==================== ALWAYS-VISIBLE STICKY BOTTOM CONFIRM BAR ==================== -->
+  <div class="sticky-confirm-bar">
+    <div class="sticky-confirm-inner">
+      <button id="sticky-confirm-btn" type="button" class="confirm-bar-btn confirm-bar-btn--idle">
+        <span>تأكيد الحفظ</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== CONFIRMATION REVIEW MODAL ==================== -->
+  <div id="confirm-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="confirm-modal-title" class="modal-title">مراجعة قبل التأكيد النهائي</h2>
+        <span id="modal-count-pill" class="modal-date-pill tabular">0 محاضرات</span>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-date-banner">
+          <span>سيتم تسجيلها بتاريخ:</span>
+          <strong id="modal-egypt-date">--</strong>
+        </div>
+
+        <div id="pending-review-list" class="pending-review-list"></div>
+
+        <p class="modal-note">
+          تأكد إنك معلمتش محاضرات أقل أو زيادة بالغلط. بعد الضغط على <strong>تأكيد وقفل نهائي</strong> سيتم حفظها بهذا التاريخ ولن يمكنك تعديلها لاحقاً.
+        </p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="modal-confirm-lock-btn" type="button" class="modal-btn modal-btn--confirm">
+          <span>تأكيد وقفل نهائي 🔒</span>
+        </button>
+        <button id="modal-cancel-btn" type="button" class="modal-btn modal-btn--cancel">
+          <span>تراجع للمراجعة</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast-container" class="toast-container" role="status" aria-live="polite">
+    <div id="toast-card" class="toast-card"></div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =======================================================================
+         1. CONSTANTS, SUBJECTS & STORAGE KEYS
+      ======================================================================= */
+      const STATE_KEY = 'rescue83_state_v4';
+      const LEGACY_V3_KEY = 'rescue_plan_83_v3';
+      const PWA_DOWNLOADED_KEY = 'rescue83_pwa_downloaded';
+      const PWA_INSTALLED_KEY = 'rescue83_pwa_installed';
+
+      const EGYPT_TZ = 'Africa/Cairo';
+      const DEADLINE_ISO = '2026-12-31';
+      const SEED_DATE_ISO = '2026-11-27';
+
+      const SUBJECTS = [
+        { id: 'physics',   name: 'الفيزياء',       pillName: 'الفيزياء', count: 15, color: '#818cf8' },
+        { id: 'chemistry', name: 'الكيمياء',       pillName: 'الكيمياء', count: 15, color: '#f59e0b' },
+        { id: 'arabic',    name: 'اللغة العربية', pillName: 'العربي',   count: 19, color: '#22d3ee' },
+        { id: 'biology',   name: 'الأحياء',        pillName: 'الأحياء',  count: 34, color: '#10b981' }
+      ];
+
+      const TOTAL_LECTURES = SUBJECTS.reduce((sum, s) => sum + s.count, 0); // 83
+
+      const SUBJECT_MAP = SUBJECTS.reduce((acc, s) => {
+        acc[s.id] = s;
+        return acc;
+      }, {});
+
+      const ARABIC_WEEKDAYS = [
+        'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'
+      ];
+
+      const ARABIC_MONTHS = [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      ];
+
+      /* =======================================================================
+         2. STRICT EGYPT TIMEZONE UTILITIES (Africa/Cairo)
+      ======================================================================= */
+      const cairoDateFmt = new Intl.DateTimeFormat('en-CA', {
+        timeZone: EGYPT_TZ,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+
+      const cairoTimeFmt = new Intl.DateTimeFormat('en-GB', {
+        timeZone: EGYPT_TZ,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        hourCycle: 'h23'
+      });
+
+      /**
+       * Returns current Egypt ISO date (YYYY-MM-DD) and live HH:MM:SS countdown to 12:00 AM Egypt time.
+       */
+      function getEgyptNow() {
+        const now = new Date();
+        const isoDate = cairoDateFmt.format(now);
+        const parts = cairoTimeFmt.formatToParts(now);
+        const map = {};
+        for (let i = 0; i < parts.length; i++) {
+          map[parts[i].type] = parts[i].value;
+        }
+
+        const h = parseInt(map.hour || '0', 10) % 24;
+        const m = parseInt(map.minute || '0', 10);
+        const s = parseInt(map.second || '0', 10);
+
+        const elapsed = h * 3600 + m * 60 + s;
+        const left = Math.max(0, 86400 - elapsed);
+        const lh = Math.floor(left / 3600);
+        const lm = Math.floor((left % 3600) / 60);
+        const ls = left % 60;
+
+        return {
+          isoDate,
+          countdown: `${String(lh).padStart(2, '0')}:${String(lm).padStart(2, '0')}:${String(ls).padStart(2, '0')}`
+        };
+      }
+
+      function isoToDayNum(iso) {
+        const [y, m, d] = iso.split('-').map(Number);
+        return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+      }
+
+      function shiftIsoDate(iso, delta) {
+        const [y, m, d] = iso.split('-').map(Number);
+        const dt = new Date(Date.UTC(y, m - 1, d + delta));
+        return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+      }
+
+      function getRemainingDaysInclusive(todayIso) {
+        return Math.max(1, isoToDayNum(DEADLINE_ISO) - isoToDayNum(todayIso) + 1);
+      }
+
+      function formatArabicShortDate(iso) {
+        if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+        const [, m, d] = iso.split('-').map(Number);
+        return `${d} ${ARABIC_MONTHS[m - 1] || ''}`;
+      }
+
+      function formatArabicFullDate(iso) {
+        if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+        const [y, m, d] = iso.split('-').map(Number);
+        const w = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+        return `${ARABIC_WEEKDAYS[w]}، ${d} ${ARABIC_MONTHS[m - 1]} ${y}`;
+      }
+
+      function formatLectureCountAr(count) {
+        if (count === 1) return 'محاضرة واحدة';
+        if (count === 2) return 'محاضرتين';
+        if (count >= 3 && count <= 10) return `${count} محاضرات`;
+        return `${count} محاضرة`;
+      }
+
+      /* =======================================================================
+         3. STATE MANAGEMENT & PERMANENT NOV 27 SEED
+      ======================================================================= */
+      function parseLectureId(id) {
+        if (typeof id !== 'string') return null;
+        const parts = id.split('-');
+        if (parts.length !== 2) return null;
+        const subj = SUBJECT_MAP[parts[0]];
+        const num = Number(parts[1]);
+        if (!subj || !Number.isInteger(num) || num < 1 || num > subj.count) return null;
+        return { id: `${subj.id}-${num}`, subj, num };
+      }
+
+      function createFreshLectures() {
+        const map = {};
+        SUBJECTS.forEach((subj) => {
+          for (let i = 1; i <= subj.count; i++) {
+            map[`${subj.id}-${i}`] = { locked: false, pending: false, date: null };
+          }
+        });
+        return map;
+      }
+
+      let lecturesState = createFreshLectures();
+      let activeFilter = 'all';
+      let lastRenderedIsoDate = getEgyptNow().isoDate;
+      let deferredInstallPrompt = null;
+      let toastTimer = null;
+
+      /**
+       * Enforces that physics-1 and chemistry-1 are always permanently locked on 2026-11-27.
+       */
+      function enforceInitialSeed() {
+        lecturesState['physics-1'] = { locked: true, pending: false, date: SEED_DATE_ISO };
+        lecturesState['chemistry-1'] = { locked: true, pending: false, date: SEED_DATE_ISO };
+      }
+
+      function saveState() {
+        try {
+          window.localStorage.setItem(STATE_KEY, JSON.stringify({
+            version: 4,
+            lectures: lecturesState
+          }));
+        } catch (err) {
+          console.error('Could not save state:', err);
+        }
+      }
+
+      function loadState() {
+        lecturesState = createFreshLectures();
+        try {
+          const rawV4 = window.localStorage.getItem(STATE_KEY);
+          if (rawV4) {
+            const parsed = JSON.parse(rawV4);
+            const src = (parsed && parsed.lectures && typeof parsed.lectures === 'object') ? parsed.lectures : null;
+            if (src) {
+              Object.keys(src).forEach((id) => {
+                const info = parseLectureId(id);
+                if (!info) return;
+                const item = src[id];
+                if (!item || typeof item !== 'object') return;
+                const isLocked = Boolean(item.locked && typeof item.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.date));
+                lecturesState[info.id] = {
+                  locked: isLocked,
+                  pending: isLocked ? false : Boolean(item.pending),
+                  date: isLocked ? item.date : null
+                };
+              });
+            }
+          } else {
+            // Smoothly carry over any already-locked lectures from previous v3 storage if present
+            const rawV3 = window.localStorage.getItem(LEGACY_V3_KEY);
+            if (rawV3) {
+              const parsedV3 = JSON.parse(rawV3);
+              if (parsedV3 && parsedV3.lectures && typeof parsedV3.lectures === 'object') {
+                Object.keys(parsedV3.lectures).forEach((id) => {
+                  const info = parseLectureId(id);
+                  if (!info) return;
+                  const item = parsedV3.lectures[id];
+                  if (!item || typeof item !== 'object') return;
+                  if (item.done && item.locked && typeof item.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.date)) {
+                    lecturesState[info.id] = { locked: true, pending: false, date: item.date };
+                  } else if (item.done && !item.locked) {
+                    lecturesState[info.id] = { locked: false, pending: true, date: null };
+                  }
+                });
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Fallback to clean initial state:', err);
+          lecturesState = createFreshLectures();
+        }
+
+        enforceInitialSeed();
+        saveState();
+      }
+
+      /* =======================================================================
+         4. METRICS, STREAK & PENDING LIST COMPUTATION
+      ======================================================================= */
+      function computeMetrics(todayIso) {
+        let confirmedCount = 0;
+        let pendingCount = 0;
+        const confirmedDates = new Set();
+        const pendingList = [];
+        const perSubject = {};
+
+        SUBJECTS.forEach((subj) => {
+          let sConfirmed = 0;
+          let sPending = 0;
+
+          for (let i = 1; i <= subj.count; i++) {
+            const id = `${subj.id}-${i}`;
+            const item = lecturesState[id];
+            if (item.locked) {
+              confirmedCount++;
+              sConfirmed++;
+              if (item.date) confirmedDates.add(item.date);
+            } else if (item.pending) {
+              pendingCount++;
+              sPending++;
+              pendingList.push({ id, subj, num: i });
+            }
+          }
+
+          const sCompleted = sConfirmed + sPending;
+          perSubject[subj.id] = {
+            confirmed: sConfirmed,
+            pending: sPending,
+            completed: sCompleted,
+            total: subj.count,
+            percent: Math.round((sCompleted / subj.count) * 100)
+          };
+        });
+
+        const totalCompleted = confirmedCount + pendingCount;
+        const remainingLectures = Math.max(0, TOTAL_LECTURES - totalCompleted);
+        const remainingDays = getRemainingDaysInclusive(todayIso);
+        const dailyRate = remainingLectures / remainingDays;
+        const overallPercent = Math.round((totalCompleted / TOTAL_LECTURES) * 100);
+        const lockedPercent = (confirmedCount / TOTAL_LECTURES) * 100;
+        const pendingPercent = (pendingCount / TOTAL_LECTURES) * 100;
+
+        // Commitment streak from unique confirmed dates (ending today or yesterday in Egypt time)
+        let streak = 0;
+        let cursor = confirmedDates.has(todayIso)
+          ? todayIso
+          : shiftIsoDate(todayIso, -1);
+
+        while (confirmedDates.has(cursor)) {
+          streak++;
+          cursor = shiftIsoDate(cursor, -1);
+        }
+
+        return {
+          confirmedCount,
+          pendingCount,
+          totalCompleted,
+          remainingLectures,
+          remainingDays,
+          dailyRate,
+          overallPercent,
+          lockedPercent,
+          pendingPercent,
+          streak,
+          activeConfirmedDays: confirmedDates.size,
+          pendingList,
+          perSubject
+        };
+      }
+
+      /* =======================================================================
+         5. DOM REFERENCES & TOAST HELPER
+      ======================================================================= */
+      const els = {
+        egyptDateText: document.getElementById('egypt-date-text'),
+        midnightCountdown: document.getElementById('midnight-countdown'),
+
+        pwaActionsWrap: document.getElementById('pwa-actions-wrap'),
+        pwaDownloadAllBtn: document.getElementById('pwa-download-all-btn'),
+        pwaInstallBtn: document.getElementById('pwa-install-btn'),
+
+        metricPercent: document.getElementById('metric-percent'),
+        metricConfirmed: document.getElementById('metric-confirmed'),
+        metricPendingPill: document.getElementById('metric-pending-pill'),
+        overallProgressbar: document.getElementById('overall-progressbar'),
+        progressFillLocked: document.getElementById('progress-fill-locked'),
+        progressFillPending: document.getElementById('progress-fill-pending'),
+        metricRemaining: document.getElementById('metric-remaining'),
+        metricDailyRate: document.getElementById('metric-daily-rate'),
+        metricDaysLeft: document.getElementById('metric-days-left'),
+        metricStreak: document.getElementById('metric-streak'),
+        metricStreakUnit: document.getElementById('metric-streak-unit'),
+        metricActiveDays: document.getElementById('metric-active-days'),
+
+        filterPillsWrap: document.getElementById('filter-pills-wrap'),
+        subjectsRoot: document.getElementById('subjects-root'),
+
+        stickyConfirmBtn: document.getElementById('sticky-confirm-btn'),
+
+        confirmModal: document.getElementById('confirm-modal'),
+        modalCountPill: document.getElementById('modal-count-pill'),
+        modalEgyptDate: document.getElementById('modal-egypt-date'),
+        pendingReviewList: document.getElementById('pending-review-list'),
+        modalConfirmLockBtn: document.getElementById('modal-confirm-lock-btn'),
+        modalCancelBtn: document.getElementById('modal-cancel-btn'),
+
+        toastContainer: document.getElementById('toast-container'),
+        toastCard: document.getElementById('toast-card')
+      };
+
+      function showToast(message, type) {
+        els.toastCard.textContent = message;
+        els.toastCard.className = 'toast-card' + (type ? ` toast-card--${type}` : '');
+        els.toastContainer.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          els.toastContainer.classList.remove('is-visible');
+        }, 3600);
+      }
+
+      /* =======================================================================
+         6. RENDER UI (DASHBOARD, FILTERS, LECTURES, STICKY CONFIRM BAR)
+      ======================================================================= */
+      function renderAll() {
+        const egyptNow = getEgyptNow();
+        lastRenderedIsoDate = egyptNow.isoDate;
+        const m = computeMetrics(egyptNow.isoDate);
+
+        // Header date & live countdown
+        els.egyptDateText.textContent = formatArabicFullDate(egyptNow.isoDate);
+        els.midnightCountdown.textContent = egyptNow.countdown;
+
+        // Metric Card 1: Progress
+        els.metricPercent.textContent = `${m.overallPercent}%`;
+        els.metricConfirmed.textContent = m.confirmedCount;
+        if (m.pendingCount > 0) {
+          els.metricPendingPill.textContent = `+${m.pendingCount} قيد التحديد`;
+          els.metricPendingPill.style.display = 'inline-flex';
+        } else {
+          els.metricPendingPill.style.display = 'none';
+        }
+
+        els.progressFillLocked.style.width = `${m.lockedPercent}%`;
+        els.progressFillPending.style.width = `${m.pendingPercent}%`;
+        els.overallProgressbar.setAttribute('aria-valuenow', String(m.overallPercent));
+
+        els.metricRemaining.textContent = m.remainingLectures === 0
+          ? 'اكتملت الخطة 🎉'
+          : `${m.remainingLectures} محاضرة`;
+
+        // Metric Card 2: Dynamic Daily Rate
+        els.metricDailyRate.textContent = m.remainingLectures === 0
+          ? '0.0'
+          : m.dailyRate.toFixed(1);
+
+        // Metric Card 3: Remaining Days
+        els.metricDaysLeft.textContent = m.remainingDays;
+
+        // Metric Card 4: Commitment Streak
+        els.metricStreak.textContent = m.streak;
+        els.metricStreakUnit.textContent = m.streak === 1 ? 'يوم متتالي 🔥' : 'أيام متتالية 🔥';
+        els.metricActiveDays.textContent = m.activeConfirmedDays === 1
+          ? '1 يوم'
+          : `${m.activeConfirmedDays} أيام`;
+
+        // Filter Pills
+        renderFilterPills(m);
+
+        // Subjects & Lecture Tiles
+        renderSubjects(m);
+
+        // Always-Visible Sticky Confirm Button
+        renderStickyConfirmButton(m.pendingCount);
+      }
+
+      function renderFilterPills(m) {
+        const pills = [
+          `<button type="button" class="filter-pill ${activeFilter === 'all' ? 'is-active' : ''}" data-filter="all">
+            <span>الكل</span>
+            <span class="pill-mini-count tabular">${m.totalCompleted}/${TOTAL_LECTURES}</span>
+          </button>`
+        ];
+
+        SUBJECTS.forEach((subj) => {
+          const s = m.perSubject[subj.id];
+          pills.push(`
+            <button type="button" class="filter-pill ${activeFilter === subj.id ? 'is-active' : ''}" data-filter="${subj.id}">
+              <span class="dot" style="background-color:${subj.color};"></span>
+              <span>${subj.pillName}</span>
+              <span class="pill-mini-count tabular">${s.completed}/${s.total}</span>
+            </button>
+          `);
+        });
+
+        els.filterPillsWrap.innerHTML = pills.join('');
+      }
+
+      function renderSubjects(m) {
+        const list = activeFilter === 'all'
+          ? SUBJECTS
+          : SUBJECTS.filter((s) => s.id === activeFilter);
+
+        const frag = document.createDocumentFragment();
+        const checkSvg = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>`;
+
+        list.forEach((subj) => {
+          const s = m.perSubject[subj.id];
+          const section = document.createElement('section');
+          section.className = 'subject-section';
+          section.setAttribute('aria-label', subj.name);
+
+          const tilesHtml = [];
+          for (let i = 1; i <= subj.count; i++) {
+            const id = `${subj.id}-${i}`;
+            const item = lecturesState[id];
+
+            let stateClass = '';
+            let checkContent = '';
+            let badgeHtml = `<span class="lecture-badge lecture-badge--idle">غير مكتمل</span>`;
+            let ariaState = 'غير مكتملة';
+
+            if (item.locked) {
+              stateClass = 'is-locked';
+              checkContent = checkSvg;
+              const arDate = formatArabicShortDate(item.date);
+              badgeHtml = `<span class="lecture-badge lecture-badge--locked tabular">🔒 ${arDate}</span>`;
+              ariaState = `مؤكدة ومقفولة بتاريخ ${arDate}`;
+            } else if (item.pending) {
+              stateClass = 'is-pending';
+              checkContent = checkSvg;
+              badgeHtml = `<span class="lecture-badge lecture-badge--pending">قيد التحديد</span>`;
+              ariaState = 'قيد التحديد';
+            }
+
+            tilesHtml.push(`
+              <button type="button"
+                class="lecture-card ${stateClass}"
+                data-lecture-id="${id}"
+                aria-pressed="${item.locked || item.pending}"
+                aria-label="${subj.name} محاضرة ${i} — ${ariaState}">
+                <div class="lecture-top">
+                  <span class="lecture-num tabular">محاضرة ${i}</span>
+                  <span class="lecture-check" aria-hidden="true">${checkContent}</span>
+                </div>
+                <div class="lecture-bottom">
+                  ${badgeHtml}
+                </div>
+              </button>
+            `);
+          }
+
+          section.innerHTML = `
+            <div class="subject-header">
+              <div class="subject-header-top">
+                <div class="subject-name-wrap">
+                  <span class="subject-stripe" style="background-color:${subj.color};"></span>
+                  <h2 class="subject-name">${subj.name}</h2>
+                </div>
+                <div class="subject-stats tabular">
+                  <span><strong>${s.completed}</strong> / ${s.total}</span>
+                  <span>(${s.percent}%)</span>
+                </div>
+              </div>
+              <div class="subject-mini-bar">
+                <div class="subject-mini-fill" style="width:${s.percent}%;background-color:${subj.color};"></div>
+              </div>
+            </div>
+            <div class="lectures-grid">${tilesHtml.join('')}</div>
+          `;
+
+          frag.appendChild(section);
+        });
+
+        els.subjectsRoot.innerHTML = '';
+        els.subjectsRoot.appendChild(frag);
+      }
+
+      function renderStickyConfirmButton(pendingCount) {
+        if (pendingCount > 0) {
+          els.stickyConfirmBtn.className = 'confirm-bar-btn confirm-bar-btn--active';
+          els.stickyConfirmBtn.innerHTML = `<span>🔒 تأكيد وحفظ (${formatLectureCountAr(pendingCount)})</span>`;
+        } else {
+          els.stickyConfirmBtn.className = 'confirm-bar-btn confirm-bar-btn--idle';
+          els.stickyConfirmBtn.innerHTML = `<span>تأكيد الحفظ</span>`;
+        }
+      }
+
+      /* =======================================================================
+         7. LECTURE INTERACTION & CONFIRMATION MODAL FLOW
+      ======================================================================= */
+      function handleLectureTap(cardEl) {
+        const id = cardEl.dataset.lectureId;
+        const info = parseLectureId(id);
+        if (!info) return;
+
+        const item = lecturesState[info.id];
+
+        // Locked lecture -> NEVER uncheck, gentle shake + toast
+        if (item.locked) {
+          cardEl.classList.remove('is-shaking');
+          void cardEl.offsetWidth;
+          cardEl.classList.add('is-shaking');
+
+          try {
+            if (navigator.vibrate) navigator.vibrate(22);
+          } catch (e) {}
+
+          const arDate = formatArabicShortDate(item.date);
+          showToast(`تم تأكيد وقفل هذه المحاضرة يوم ${arDate} ولا يمكن تعديلها`, 'locked');
+          return;
+        }
+
+        // Draft/Pending toggle freely ON/OFF before confirming
+        item.pending = !item.pending;
+        saveState();
+        renderAll();
+      }
+
+      function openConfirmModal() {
+        const egyptNow = getEgyptNow();
+        const m = computeMetrics(egyptNow.isoDate);
+
+        if (m.pendingCount === 0) {
+          showToast('علّم على المحاضرات اللي خلصتها الأول وبعدين اضغط تأكيد', 'info');
+          return;
+        }
+
+        const todayArabic = formatArabicShortDate(egyptNow.isoDate);
+        els.modalCountPill.textContent = formatLectureCountAr(m.pendingCount);
+        els.modalEgyptDate.textContent = todayArabic;
+
+        els.pendingReviewList.innerHTML = m.pendingList.map((entry) => `
+          <div class="pending-review-item">
+            <div class="pending-review-left">
+              <span class="dot" style="background-color:${entry.subj.color};"></span>
+              <span>${entry.subj.name} — محاضرة ${entry.num}</span>
+            </div>
+            <span style="font-size:0.75rem;color:var(--sky-light);">قيد التأكيد</span>
+          </div>
+        `).join('');
+
+        els.confirmModal.classList.add('is-open');
+        document.body.classList.add('modal-open');
+      }
+
+      function closeConfirmModal() {
+        els.confirmModal.classList.remove('is-open');
+        document.body.classList.remove('modal-open');
+      }
+
+      function commitPendingConfirmations() {
+        const todayIso = getEgyptNow().isoDate;
+        let lockedNow = 0;
+
+        Object.keys(lecturesState).forEach((id) => {
+          const item = lecturesState[id];
+          if (!item.locked && item.pending) {
+            item.locked = true;
+            item.pending = false;
+            item.date = todayIso;
+            lockedNow++;
+          }
+        });
+
+        saveState();
+        closeConfirmModal();
+        renderAll();
+
+        if (lockedNow > 0) {
+          const arDate = formatArabicShortDate(todayIso);
+          showToast(`تم تأكيد وقفل ${formatLectureCountAr(lockedNow)} بتاريخ ${arDate} نهائياً 🔒`, 'success');
+        }
+      }
+
+      /* =======================================================================
+         8. SELF-HIDING PWA 4-FILE DOWNLOADER & SMART INSTALL BUTTON
+      ======================================================================= */
+      function isStandaloneMode() {
+        return Boolean(
+          (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+          window.navigator.standalone === true
+        );
+      }
+
+      function syncPwaButtonsVisibility() {
+        const standalone = isStandaloneMode();
+
+        // If already running as installed standalone app, remove both buttons permanently
+        if (standalone) {
+          try {
+            window.localStorage.setItem(PWA_INSTALLED_KEY, 'true');
+          } catch (e) {}
+          if (els.pwaDownloadAllBtn && els.pwaDownloadAllBtn.parentNode) els.pwaDownloadAllBtn.remove();
+          if (els.pwaInstallBtn && els.pwaInstallBtn.parentNode) els.pwaInstallBtn.remove();
+          els.pwaActionsWrap.classList.add('is-empty');
+          return;
+        }
+
+        let alreadyDownloaded = false;
+        let alreadyInstalled = false;
+        try {
+          alreadyDownloaded = window.localStorage.getItem(PWA_DOWNLOADED_KEY) === 'true';
+          alreadyInstalled = window.localStorage.getItem(PWA_INSTALLED_KEY) === 'true';
+        } catch (e) {}
+
+        let visibleCount = 0;
+
+        // Button A: Download all 4 PWA files once
+        if (els.pwaDownloadAllBtn && els.pwaDownloadAllBtn.parentNode) {
+          if (alreadyDownloaded) {
+            els.pwaDownloadAllBtn.remove();
+          } else {
+            els.pwaDownloadAllBtn.style.display = 'inline-flex';
+            visibleCount++;
+          }
+        }
+
+        // Button B: Smart Install App button (only when beforeinstallprompt fired and not installed)
+        if (els.pwaInstallBtn && els.pwaInstallBtn.parentNode) {
+          if (alreadyInstalled) {
+            els.pwaInstallBtn.remove();
+          } else if (deferredInstallPrompt) {
+            els.pwaInstallBtn.style.display = 'inline-flex';
+            visibleCount++;
+          } else {
+            els.pwaInstallBtn.style.display = 'none';
+          }
+        }
+
+        if (visibleCount === 0) {
+          els.pwaActionsWrap.classList.add('is-empty');
+        } else {
+          els.pwaActionsWrap.classList.remove('is-empty');
+        }
+      }
+
+      /* Offscreen Canvas Icon Generator (192x192 & 512x512) */
+      function drawRoundedRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      function renderAppIconCanvas(size) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return canvas;
+
+        // Full-bleed dark slate/navy background
+        const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+        bgGrad.addColorStop(0, '#0b1120');
+        bgGrad.addColorStop(0.55, '#111c36');
+        bgGrad.addColorStop(1, '#09101f');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, size, size);
+
+        // Ambient emerald-sky radial glow
+        const glow = ctx.createRadialGradient(
+          size * 0.5, size * 0.36, size * 0.04,
+          size * 0.5, size * 0.44, size * 0.52
+        );
+        glow.addColorStop(0, 'rgba(16, 185, 129, 0.30)');
+        glow.addColorStop(0.55, 'rgba(56, 189, 248, 0.12)');
+        glow.addColorStop(1, 'rgba(11, 17, 32, 0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, size, size);
+
+        // Crisp rounded inner border
+        const pad = Math.round(size * 0.075);
+        const box = size - pad * 2;
+        drawRoundedRect(ctx, pad, pad, box, box, Math.round(size * 0.21));
+        const borderGrad = ctx.createLinearGradient(pad, pad, size - pad, size - pad);
+        borderGrad.addColorStop(0, 'rgba(56, 189, 248, 0.55)');
+        borderGrad.addColorStop(1, 'rgba(16, 185, 129, 0.55)');
+        ctx.strokeStyle = borderGrad;
+        ctx.lineWidth = Math.max(2, Math.round(size * 0.016));
+        ctx.stroke();
+
+        // Rescue shield badge in emerald-sky gradient
+        const bw = size * 0.30;
+        const bh = size * 0.25;
+        const bx = (size - bw) * 0.5;
+        const by = size * 0.17;
+        drawRoundedRect(ctx, bx, by, bw, bh, size * 0.072);
+        const badgeGrad = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+        badgeGrad.addColorStop(0, '#38bdf8');
+        badgeGrad.addColorStop(1, '#10b981');
+        ctx.fillStyle = badgeGrad;
+        ctx.fill();
+
+        // Crisp checkmark inside rescue emblem
+        ctx.beginPath();
+        ctx.moveTo(bx + bw * 0.26, by + bh * 0.52);
+        ctx.lineTo(bx + bw * 0.44, by + bh * 0.70);
+        ctx.lineTo(bx + bw * 0.76, by + bh * 0.32);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = Math.max(3, size * 0.038);
+        ctx.strokeStyle = '#04141d';
+        ctx.stroke();
+
+        // Bold "83" typography
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = `800 ${Math.round(size * 0.23)}px system-ui, -apple-system, "Segoe UI", Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('83', size * 0.5, size * 0.59);
+
+        // Arabic label "خطة الإنقاذ"
+        ctx.fillStyle = '#7dd3fc';
+        ctx.font = `700 ${Math.round(size * 0.088)}px system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif`;
+        ctx.fillText('خطة الإنقاذ', size * 0.5, size * 0.765);
+
+        // 4 Subject Accent Dots
+        const dots = ['#818cf8', '#f59e0b', '#22d3ee', '#10b981'];
+        const r = Math.max(2, size * 0.017);
+        const gap = size * 0.068;
+        const startX = size * 0.5 - ((dots.length - 1) * gap) * 0.5;
+        const dotY = size * 0.858;
+        dots.forEach((col, i) => {
+          ctx.beginPath();
+          ctx.arc(startX + i * gap, dotY, r, 0, Math.PI * 2);
+          ctx.fillStyle = col;
+          ctx.fill();
+        });
+
+        return canvas;
+      }
+
+      function canvasToPngBlob(canvas) {
+        return new Promise((resolve) => {
+          if (canvas.toBlob) {
+            canvas.toBlob((blob) => {
+              if (blob) {
+                resolve(blob);
+                return;
+              }
+              resolve(dataUrlToBlob(canvas.toDataURL('image/png')));
+            }, 'image/png');
+          } else {
+            resolve(dataUrlToBlob(canvas.toDataURL('image/png')));
+          }
+        });
+      }
+
+      function dataUrlToBlob(dataUrl) {
+        const parts = dataUrl.split(',');
+        const mime = (parts[0].match(/:(.*?);/) || [])[1] || 'image/png';
+        const bin = atob(parts[1]);
+        const arr = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        return new Blob([arr], { type: mime });
+      }
+
+      function buildManifestText() {
+        return JSON.stringify({
+          name: 'خطة الإنقاذ — 83',
+          short_name: 'خطة الإنقاذ',
+          description: 'متابعة إنجاز 83 محاضرة حتى 31 ديسمبر 2026 بتوقيت مصر',
+          start_url: './',
+          scope: './',
+          display: 'standalone',
+          orientation: 'any',
+          dir: 'rtl',
+          lang: 'ar',
+          background_color: '#0b1120',
+          theme_color: '#0b1120',
+          icons: [
+            { src: './icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: './icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+            { src: './icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: './icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          ]
+        }, null, 2);
+      }
+
+      function buildServiceWorkerText() {
+        return [
+          "const CACHE_NAME = 'rescue83-offline-v4';",
+          "const PRECACHE_ASSETS = [",
+          "  './',",
+          "  './index.html',",
+          "  './manifest.json',",
+          "  './icon-192.png',",
+          "  './icon-512.png'",
+          "];",
+          "",
+          "self.addEventListener('install', (event) => {",
+          "  event.waitUntil(",
+          "    caches.open(CACHE_NAME)",
+          "      .then((cache) => cache.addAll(PRECACHE_ASSETS))",
+          "      .then(() => self.skipWaiting())",
+          "  );",
+          "});",
+          "",
+          "self.addEventListener('activate', (event) => {",
+          "  event.waitUntil(",
+          "    caches.keys()",
+          "      .then((keys) => Promise.all(",
+          "        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))",
+          "      ))",
+          "      .then(() => self.clients.claim())",
+          "  );",
+          "});",
+          "",
+          "self.addEventListener('fetch', (event) => {",
+          "  const req = event.request;",
+          "  if (req.method !== 'GET') return;",
+          "  const url = new URL(req.url);",
+          "  if (url.origin !== self.location.origin) return;",
+          "",
+          "  // Network-first with clean offline cache fallback",
+          "  event.respondWith(",
+          "    fetch(req)",
+          "      .then((res) => {",
+          "        if (res && res.status === 200) {",
+          "          const copy = res.clone();",
+          "          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));",
+          "        }",
+          "        return res;",
+          "      })",
+          "      .catch(() => caches.match(req).then((cached) => {",
+          "        if (cached) return cached;",
+          "        if (req.mode === 'navigate') return caches.match('./index.html');",
+          "        return undefined;",
+          "      }))",
+          "  );",
+          "});",
+          ""
+        ].join('\n');
+      }
+
+      function triggerBlobDownload(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2500);
+      }
+
+      async function handleDownloadAll4PwaFiles() {
+        // Immediately lock flag & permanently remove button so it never appears again
+        try {
+          window.localStorage.setItem(PWA_DOWNLOADED_KEY, 'true');
+        } catch (e) {}
+
+        if (els.pwaDownloadAllBtn && els.pwaDownloadAllBtn.parentNode) {
+          els.pwaDownloadAllBtn.remove();
+        }
+        syncPwaButtonsVisibility();
+
+        try {
+          const [blob192, blob512] = await Promise.all([
+            canvasToPngBlob(renderAppIconCanvas(192)),
+            canvasToPngBlob(renderAppIconCanvas(512))
+          ]);
+
+          const manifestBlob = new Blob([buildManifestText()], { type: 'application/manifest+json;charset=utf-8' });
+          const swBlob = new Blob([buildServiceWorkerText()], { type: 'application/javascript;charset=utf-8' });
+
+          // Sequential download with 350ms spacing so Chrome reliably grabs all 4 files
+          triggerBlobDownload(blob192, 'icon-192.png');
+          setTimeout(() => triggerBlobDownload(blob512, 'icon-512.png'), 350);
+          setTimeout(() => triggerBlobDownload(manifestBlob, 'manifest.json'), 700);
+          setTimeout(() => triggerBlobDownload(swBlob, 'sw.js'), 1050);
+
+          showToast('تم تحميل الـ 4 ملفات! ارفعهم على GitHub جنب index.html لتفعيل زر التثبيت', 'success');
+        } catch (err) {
+          console.error('Error generating PWA files:', err);
+          showToast('حدث خطأ أثناء تجهيز الملفات.', 'locked');
+        }
+      }
+
+      async function handleSmartInstallClick() {
+        if (!deferredInstallPrompt) return;
+        try {
+          deferredInstallPrompt.prompt();
+          const choice = await deferredInstallPrompt.userChoice;
+          if (choice && choice.outcome === 'accepted') {
+            deferredInstallPrompt = null;
+            try {
+              window.localStorage.setItem(PWA_INSTALLED_KEY, 'true');
+            } catch (e) {}
+            if (els.pwaInstallBtn && els.pwaInstallBtn.parentNode) {
+              els.pwaInstallBtn.remove();
+            }
+            syncPwaButtonsVisibility();
+            showToast('تم تثبيت التطبيق بنجاح 🎉', 'success');
+          }
+        } catch (err) {
+          console.error('Install prompt error:', err);
+        }
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        syncPwaButtonsVisibility();
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        try {
+          window.localStorage.setItem(PWA_INSTALLED_KEY, 'true');
+        } catch (e) {}
+        if (els.pwaDownloadAllBtn && els.pwaDownloadAllBtn.parentNode) els.pwaDownloadAllBtn.remove();
+        if (els.pwaInstallBtn && els.pwaInstallBtn.parentNode) els.pwaInstallBtn.remove();
+        syncPwaButtonsVisibility();
+      });
+
+      /* =======================================================================
+         9. EVENT LISTENERS & LIVE 1-SECOND EGYPT CLOCK TICKER
+      ======================================================================= */
+      els.filterPillsWrap.addEventListener('click', (e) => {
+        const pill = e.target.closest('[data-filter]');
+        if (!pill) return;
+        activeFilter = pill.dataset.filter;
+        renderAll();
+      });
+
+      els.subjectsRoot.addEventListener('click', (e) => {
+        const card = e.target.closest('.lecture-card');
+        if (!card) return;
+        handleLectureTap(card);
+      });
+
+      els.stickyConfirmBtn.addEventListener('click', openConfirmModal);
+      els.modalConfirmLockBtn.addEventListener('click', commitPendingConfirmations);
+      els.modalCancelBtn.addEventListener('click', closeConfirmModal);
+
+      els.confirmModal.addEventListener('click', (e) => {
+        if (e.target === els.confirmModal) closeConfirmModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && els.confirmModal.classList.contains('is-open')) {
+          closeConfirmModal();
+        }
+      });
+
+      if (els.pwaDownloadAllBtn) {
+        els.pwaDownloadAllBtn.addEventListener('click', handleDownloadAll4PwaFiles);
+      }
+      if (els.pwaInstallBtn) {
+        els.pwaInstallBtn.addEventListener('click', handleSmartInstallClick);
+      }
+
+      function tickClock() {
+        const egyptNow = getEgyptNow();
+        els.midnightCountdown.textContent = egyptNow.countdown;
+
+        // If Egypt midnight passed while app is open, refresh remaining days & daily pace automatically
+        if (egyptNow.isoDate !== lastRenderedIsoDate) {
+          renderAll();
+        }
+      }
+
+      // Register Service Worker safely
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          try {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+          } catch (e) {}
+        });
+      }
+
+      // Bootstrap App
+      loadState();
+      syncPwaButtonsVisibility();
+      renderAll();
+      setInterval(tickClock, 1000);
+    })();
+  </script>
+</body>
+</html>
