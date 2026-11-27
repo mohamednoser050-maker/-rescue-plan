@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0b0d10" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="خطة الإنقاذ" />
+  <title>خطة الإنقاذ — متابعة المحاضرات</title>
+
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS — Fixed Calm Obsidian / Slate Dark Theme (100% Offline)
+    ========================================================================= */
+    :root {
+      --bg-page: #0b0d10;
+      --bg-surface: #12151b;
+      --bg-elevated: #181c24;
+      --bg-subtle: #141820;
+
+      --border-hairline: #222733;
+      --border-hover: #2e3545;
+      --border-focus: #3e475c;
+
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+
+      --accent-green: #22c55e;
+      --accent-emerald: #10b981;
+      --accent-green-bg: rgba(16, 185, 129, 0.12);
+      --accent-green-border: rgba(16, 185, 129, 0.28);
+
+      --accent-sky: #38bdf8;
+      --accent-sky-bg: rgba(56, 189, 248, 0.10);
+      --accent-sky-border: rgba(56, 189, 248, 0.30);
+
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: rgba(245, 158, 11, 0.12);
+      --accent-amber-border: rgba(245, 158, 11, 0.28);
+
+      --accent-danger: #ef4444;
+      --accent-danger-bg: rgba(239, 68, 68, 0.12);
+      --accent-danger-border: rgba(239, 68, 68, 0.28);
+
+      --dot-physics: #38bdf8;
+      --dot-chemistry: #a78bfa;
+      --dot-arabic: #fbbf24;
+      --dot-biology: #34d399;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+
+      --font-sans: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    /* =========================================================================
+       RESET & BASE TYPOGRAPHY
+    ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding-bottom: 96px;
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    .tabular {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+
+    /* =========================================================================
+       LAYOUT CONTAINER
+    ========================================================================= */
+    .app-shell {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 20px 16px 32px;
+    }
+
+    @media (min-width: 640px) {
+      .app-shell {
+        padding: 24px 24px 40px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .app-shell {
+        padding: 28px 32px 48px;
+      }
+    }
+
+    /* =========================================================================
+       TOP HEADER BAR
+    ========================================================================= */
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: 20px;
+    }
+
+    .brand-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+    }
+
+    .brand-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .cairo-date-line {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cairo-date-sep {
+      color: var(--text-muted);
+    }
+
+    .topbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .util-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .util-btn:hover {
+      background-color: var(--bg-elevated);
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .util-btn--install {
+      color: #6ee7b7;
+      background-color: var(--accent-green-bg);
+      border-color: var(--accent-green-border);
+      font-weight: 600;
+    }
+
+    .util-btn--install:hover {
+      background-color: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #a7f3d0;
+    }
+
+    .util-btn svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================================
+       SUMMARY METRICS STRIP (4 EQUAL CARDS + UNIFIED OVERALL BAR)
+    ========================================================================= */
+    .summary-section {
+      margin-bottom: 22px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .metrics-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+    }
+
+    .metric-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 15px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 112px;
+    }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .metric-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .metric-tag--done {
+      color: #34d399;
+      background-color: var(--accent-green-bg);
+      border-color: var(--accent-green-border);
+    }
+
+    .metric-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .metric-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .metric-unit {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .metric-sub-strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .countdown-text {
+      color: var(--text-secondary);
+      direction: rtl;
+    }
+
+    .countdown-clock {
+      color: var(--text-primary);
+      font-weight: 600;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    /* Unified full-width ultra-thin overall progress track */
+    .overall-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+    }
+
+    .overall-track {
+      flex: 1;
+      height: 4px;
+      background-color: var(--bg-elevated);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .overall-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent-emerald);
+      border-radius: 999px;
+      transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .overall-meta {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* =========================================================================
+       CONTROLS BAR (SEGMENTED FILTER + MOBILE SUBJECT PILLS)
+    ========================================================================= */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 14px;
+      margin-bottom: 16px;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      gap: 2px;
+    }
+
+    .seg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: 7px;
+      transition: background-color 0.14s ease, color 0.14s ease;
+    }
+
+    .seg-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .seg-btn.is-active {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      font-weight: 600;
+      border: 1px solid var(--border-hover);
+    }
+
+    .seg-count {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding: 1px 5px;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .seg-btn.is-active .seg-count {
+      color: var(--text-secondary);
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    /* Subject quick-filter pills (visible on mobile & narrow tablets) */
+    .subject-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      max-width: 100%;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .subject-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (min-width: 960px) {
+      .subject-pills {
+        display: none;
+      }
+    }
+
+    .subj-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 0 11px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+    }
+
+    .subj-pill:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .subj-pill.is-active {
+      background-color: var(--bg-elevated);
+      border-color: var(--border-focus);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .controls-hint {
+      display: none;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    @media (min-width: 960px) {
+      .controls-hint {
+        display: block;
+      }
+    }
+
+    /* =========================================================================
+       MAIN 4-COLUMN SUBJECTS BOARD
+    ========================================================================= */
+    .board-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    @media (min-width: 680px) {
+      .board-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) {
+      .board-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+    }
+
+    .subject-column {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .subject-header {
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--border-hairline);
+      background-color: var(--bg-surface);
+    }
+
+    .subject-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .subject-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .subject-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .subject-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subject-priority-tag {
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-subtle);
+      padding: 1px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .subject-stats-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 7px;
+    }
+
+    .subject-stats-count strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .subject-track {
+      width: 100%;
+      height: 3px;
+      background-color: var(--bg-elevated);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .subject-fill {
+      height: 100%;
+      background-color: var(--accent-emerald);
+      border-radius: 999px;
+      transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Lecture list rows */
+    .lecture-list {
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .lecture-row {
+      width: 100%;
+      min-height: 44px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: right;
+      transition: background-color 0.12s ease, border-color 0.12s ease, opacity 0.15s ease;
+    }
+
+    .lecture-row:hover {
+      background-color: var(--bg-elevated);
+      border-color: var(--border-hairline);
+    }
+
+    .lecture-row:active {
+      background-color: #1f242f;
+    }
+
+    /* Pending (selected, editable until confirmed) */
+    .lecture-row.is-pending {
+      background-color: var(--accent-sky-bg);
+      border-color: rgba(56, 189, 248, 0.18);
+    }
+
+    .lecture-row.is-pending:hover {
+      background-color: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-sky-border);
+    }
+
+    /* Confirmed & Permanently Locked */
+    .lecture-row.is-completed {
+      background-color: rgba(16, 185, 129, 0.08);
+      cursor: default;
+    }
+
+    .lecture-row.is-completed:hover {
+      background-color: rgba(16, 185, 129, 0.11);
+      border-color: var(--accent-green-border);
+    }
+
+    @keyframes lockedShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    .lecture-row.is-locked-shake {
+      animation: lockedShake 0.32s ease;
+    }
+
+    .lecture-start {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    /* Crisp custom square checkbox */
+    .checkbox-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid #3c4454;
+      background-color: var(--bg-page);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+    }
+
+    .lecture-row:hover .checkbox-box {
+      border-color: #576278;
+    }
+
+    .lecture-row.is-pending .checkbox-box {
+      background-color: var(--accent-sky);
+      border-color: var(--accent-sky);
+      color: #06131c;
+    }
+
+    .lecture-row.is-completed .checkbox-box {
+      background-color: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: #06130e;
+    }
+
+    .checkbox-box svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 3;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .lecture-row.is-pending .checkbox-box svg,
+    .lecture-row.is-completed .checkbox-box svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lecture-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.14s ease;
+    }
+
+    .lecture-row.is-completed .lecture-label {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      text-decoration-color: #475569;
+    }
+
+    .lecture-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .lecture-date svg {
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+    }
+
+    .lecture-row.is-pending .lecture-date {
+      color: #7dd3fc;
+    }
+
+    .lecture-row.is-completed .lecture-date {
+      color: #6ee7b7;
+    }
+
+    .empty-column {
+      padding: 28px 14px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* =========================================================================
+       PERMANENT BOTTOM CONFIRM BAR (MATCHING ORIGINAL OBSIDIAN DESIGN)
+    ========================================================================= */
+    .confirm-dock {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      width: calc(100% - 32px);
+      max-width: 440px;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+    }
+
+    .confirm-dock-btn {
+      pointer-events: auto;
+      width: 100%;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: var(--radius-lg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background-color: var(--bg-surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-hover);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease;
+    }
+
+    .confirm-dock-btn:hover {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .confirm-dock-btn:active {
+      transform: scale(0.99);
+    }
+
+    .confirm-dock-btn.has-pending {
+      background-color: var(--accent-emerald);
+      border-color: #34d399;
+      color: #05140e;
+      font-weight: 700;
+    }
+
+    .confirm-dock-btn.has-pending:hover {
+      background-color: #34d399;
+      border-color: #6ee7b7;
+      color: #04110b;
+    }
+
+    .confirm-dock-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .confirm-count-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+    }
+
+    .confirm-dock-btn.has-pending .confirm-count-pill {
+      background-color: rgba(5, 20, 14, 0.18);
+      color: #05140e;
+    }
+
+    /* =========================================================================
+       MODALS (CONFIRMATION, DAILY LOG, BACKUP) — ZERO alert()/confirm()
+    ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: rgba(5, 7, 10, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .modal-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: background-color 0.14s ease, color 0.14s ease;
+    }
+
+    .modal-close-btn:hover {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Daily Log list */
+    .log-day-card {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .log-day-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .log-day-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .log-day-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #34d399;
+      background-color: var(--accent-green-bg);
+      border: 1px solid var(--accent-green-border);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .log-day-count--pending {
+      color: #7dd3fc;
+      background-color: var(--accent-sky-bg);
+      border-color: var(--accent-sky-border);
+    }
+
+    .log-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .log-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .log-empty {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Data & Action Blocks */
+    .data-block {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .data-block-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .data-block-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .data-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: 8px;
+      border: 1px solid var(--border-hover);
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+    }
+
+    .action-btn:hover {
+      background-color: #212632;
+      border-color: var(--border-focus);
+    }
+
+    .action-btn svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .action-btn--primary {
+      background-color: var(--accent-emerald);
+      border-color: #34d399;
+      color: #05140e;
+      font-weight: 700;
+    }
+
+    .action-btn--primary:hover {
+      background-color: #34d399;
+      border-color: #6ee7b7;
+      color: #04110b;
+    }
+
+    .action-btn--full {
+      width: 100%;
+    }
+
+    .action-btn--danger {
+      background-color: var(--accent-danger-bg);
+      border-color: var(--accent-danger-border);
+      color: #fca5a5;
+    }
+
+    .action-btn--danger:hover {
+      background-color: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #fecaca;
+    }
+
+    .action-btn--danger-solid {
+      background-color: #b91c1c;
+      border-color: #dc2626;
+      color: #ffffff;
+    }
+
+    .action-btn--danger-solid:hover {
+      background-color: #991b1b;
+    }
+
+    .data-status-msg {
+      font-size: 0.78rem;
+      padding: 8px 10px;
+      border-radius: 7px;
+      display: none;
+    }
+
+    .data-status-msg.is-visible {
+      display: block;
+    }
+
+    .data-status-msg--ok {
+      color: #34d399;
+      background-color: var(--accent-green-bg);
+      border: 1px solid var(--accent-green-border);
+    }
+
+    .data-status-msg--err {
+      color: #fca5a5;
+      background-color: var(--accent-danger-bg);
+      border: 1px solid var(--accent-danger-border);
+    }
+
+    .reset-confirm-box {
+      display: none;
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: var(--accent-danger-bg);
+      border: 1px solid var(--accent-danger-border);
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .reset-confirm-box.is-open {
+      display: flex;
+    }
+
+    .reset-confirm-text {
+      font-size: 0.8rem;
+      color: #fecaca;
+    }
+
+    /* Hidden textarea fallback for clipboard copy in strict WebViews */
+    .sr-only-copy {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      opacity: 0;
+    }
+
+    /* =========================================================================
+       SUBTLE UNDO SNACKBAR (5 SECONDS — SITS CLEANLY ABOVE CONFIRM DOCK)
+    ========================================================================= */
+    .toast-wrap {
+      position: fixed;
+      bottom: 72px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      z-index: 120;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      max-width: calc(100vw - 32px);
+    }
+
+    .toast-wrap.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      background-color: #161a22;
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+      color: var(--text-primary);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast-undo-btn {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #34d399;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background-color 0.14s ease;
+      white-space: nowrap;
+    }
+
+    .toast-undo-btn:hover {
+      background-color: var(--accent-green-bg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- ==================== TOP BAR ==================== -->
+    <header class="topbar">
+      <div class="brand-group">
+        <div class="brand-title-row">
+          <h1 class="brand-title">خطة الإنقاذ</h1>
+          <span class="brand-pill tabular">83 محاضرة</span>
+        </div>
+        <div class="cairo-date-line">
+          <span id="cairo-full-date">--</span>
+          <span class="cairo-date-sep">•</span>
+          <span>توقيت مصر</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Direct native install button (appears ONLY when ready on GitHub, disappears permanently after install) -->
+        <button id="direct-install-btn" type="button" class="util-btn util-btn--install" style="display:none;" aria-label="تثبيت التطبيق الآن">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>تثبيت التطبيق</span>
+        </button>
+
+        <!-- Single one-click button to download all 4 PWA files; disappears permanently after download or once hosted -->
+        <button id="download-pwa-once-btn" type="button" class="util-btn" style="display:none;" aria-label="تحميل ملفات التثبيت الأربعة">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>تحميل ملفات التثبيت</span>
+        </button>
+
+        <button id="open-log-btn" type="button" class="util-btn" aria-label="عرض سجل الإنجاز اليومي">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+          <span>السجل</span>
+        </button>
+
+        <button id="open-data-btn" type="button" class="util-btn" aria-label="النسخ الاحتياطي وإدارة البيانات">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+          </svg>
+          <span>نسخ احتياطي</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== SUMMARY METRICS ==================== -->
+    <section class="summary-section" aria-label="ملخص التقدم">
+      <div class="metrics-grid">
+
+        <!-- 1. Overall Progress -->
+        <article class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">التقدم الإجمالي</span>
+            <span id="overall-percent-badge" class="metric-tag tabular">0%</span>
+          </div>
+          <div class="metric-value-row">
+            <span id="metric-completed" class="metric-value tabular">0</span>
+            <span class="metric-unit tabular">/ 83 محاضرة</span>
+          </div>
+          <div class="metric-sub">
+            <span>المتبقي</span>
+            <span id="metric-remaining" class="metric-sub-strong tabular">83 محاضرة</span>
+          </div>
+        </article>
+
+        <!-- 2. Dynamic Daily Pace -->
+        <article class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">المعدل اليومي المطلوب</span>
+            <span class="metric-tag">متغير تلقائياً</span>
+          </div>
+          <div class="metric-value-row">
+            <span id="metric-live-pace" class="metric-value tabular">--</span>
+            <span class="metric-unit">محاضرة/يوم</span>
+          </div>
+          <div class="metric-sub">
+            <span>للأيام القادمة</span>
+            <span id="metric-tomorrow-pace" class="metric-sub-strong tabular">-- / يوم</span>
+          </div>
+        </article>
+
+        <!-- 3. Today's Target & Live Egypt Midnight Countdown -->
+        <article class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">هدف اليوم</span>
+            <span id="today-status-tag" class="metric-tag tabular">قيد التنفيذ</span>
+          </div>
+          <div class="metric-value-row">
+            <span id="metric-today-done" class="metric-value tabular">0</span>
+            <span id="metric-today-target" class="metric-unit tabular">/ -- محاضرة</span>
+          </div>
+          <div class="metric-sub">
+            <span class="countdown-text">ينتهي اليوم بعد</span>
+            <span id="midnight-countdown" class="countdown-clock tabular">--:--:--</span>
+          </div>
+        </article>
+
+        <!-- 4. Remaining Plan Days & Streak -->
+        <article class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">المتبقي للخطة</span>
+            <span class="metric-tag">حتى 31 ديسمبر</span>
+          </div>
+          <div class="metric-value-row">
+            <span id="metric-days-left" class="metric-value tabular">--</span>
+            <span class="metric-unit">يوم</span>
+          </div>
+          <div class="metric-sub">
+            <span>سلسلة الالتزام</span>
+            <span id="metric-streak" class="metric-sub-strong tabular">0 يوم</span>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Unified full-width thin progress bar -->
+      <div class="overall-progress-wrap">
+        <div class="overall-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="overall-progressbar">
+          <div id="overall-fill" class="overall-fill"></div>
+        </div>
+        <span id="overall-bar-text" class="overall-meta tabular">0 من 83 مكتمل</span>
+      </div>
+    </section>
+
+    <!-- ==================== FILTER & SUBJECT PILLS ==================== -->
+    <section class="controls-bar" aria-label="تصفية المحاضرات">
+      <div class="segmented-control" role="tablist" aria-label="حالة المحاضرات">
+        <button type="button" class="seg-btn is-active" data-filter="all" role="tab" aria-selected="true">
+          <span>الكل</span>
+          <span id="count-all" class="seg-count tabular">83</span>
+        </button>
+        <button type="button" class="seg-btn" data-filter="remaining" role="tab" aria-selected="false">
+          <span>المتبقي</span>
+          <span id="count-remaining" class="seg-count tabular">83</span>
+        </button>
+        <button type="button" class="seg-btn" data-filter="completed" role="tab" aria-selected="false">
+          <span>المكتمل</span>
+          <span id="count-completed" class="seg-count tabular">0</span>
+        </button>
+      </div>
+
+      <!-- Mobile/portrait subject filter pills -->
+      <div id="subject-pills" class="subject-pills" aria-label="اختيار المادة"></div>
+
+      <p class="controls-hint">علّم المحاضرات وعدّلها براحتك ثم اضغط «تأكيد» بالأسفل لقفلها نهائياً بتاريخ اليوم</p>
+    </section>
+
+    <!-- ==================== 4-COLUMN SUBJECTS BOARD ==================== -->
+    <main id="board-grid" class="board-grid" aria-label="قائمة المواد والمحاضرات"></main>
+
+  </div>
+
+  <!-- ==================== PERMANENT CONFIRM BUTTON DOCK ==================== -->
+  <div class="confirm-dock">
+    <button id="open-confirm-btn" type="button" class="confirm-dock-btn" aria-label="تأكيد وحفظ المحاضرات المحددة">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+      </svg>
+      <span id="confirm-btn-label">تأكيد وحفظ</span>
+      <span id="confirm-btn-count" class="confirm-count-pill tabular">0</span>
+    </button>
+  </div>
+
+  <!-- ==================== MODAL 1: CONFIRM & LOCK LECTURES ==================== -->
+  <div id="confirm-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="confirm-modal-title" class="modal-title">تأكيد وقفل المحاضرات نهائياً</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="confirm-modal" aria-label="إغلاق">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="data-block">
+          <div id="confirm-modal-date-title" class="data-block-title">تاريخ التأكيد: --</div>
+          <p class="data-block-desc">
+            راجع المحاضرات التالية قبل التأكيد. بعد الضغط على <strong>تأكيد وقفل نهائي</strong> سيتم تسجيلها بتاريخ اليوم ولن يمكن إلغاء علامة الصح عنها لاحقاً.
+          </p>
+          <div id="confirm-pending-tags" class="log-tags"></div>
+        </div>
+        <div class="data-actions-row">
+          <button id="confirm-lock-final-btn" type="button" class="action-btn action-btn--primary" style="flex:1;">
+            <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
+            <span>تأكيد وقفل نهائي</span>
+          </button>
+          <button type="button" class="action-btn" data-close-modal="confirm-modal">مراجعة وتعديل</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: DAILY LOG (سجل الإنجاز) ==================== -->
+  <div id="log-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="log-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="log-modal-title" class="modal-title">سجل الإنجاز اليومي (توقيت مصر)</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="log-modal" aria-label="إغلاق">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="log-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: DATA & BACKUP MANAGEMENT ==================== -->
+  <div id="data-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="data-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="data-modal-title" class="modal-title">النسخ الاحتياطي وإدارة البيانات</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="data-modal" aria-label="إغلاق">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Export / Import Block -->
+        <div class="data-block">
+          <div class="data-block-title">حفظ واستعادة التقدم</div>
+          <p class="data-block-desc">
+            يُحفظ تقدمك محلياً على هذا الجهاز. يمكنك تنزيل نسخة احتياطية بصيغة JSON أو استعادة نسخة سابقة في أي وقت.
+          </p>
+          <div class="data-actions-row">
+            <button id="export-json-btn" type="button" class="action-btn">
+              <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              <span>تنزيل ملف JSON</span>
+            </button>
+
+            <button id="copy-json-btn" type="button" class="action-btn">
+              <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+              </svg>
+              <span>نسخ البيانات</span>
+            </button>
+
+            <button id="import-json-btn" type="button" class="action-btn">
+              <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+              </svg>
+              <span>استيراد ملف JSON</span>
+            </button>
+            <input id="import-file-input" type="file" accept=".json,application/json" style="display:none;" />
+          </div>
+          <div id="data-status-msg" class="data-status-msg"></div>
+        </div>
+
+        <!-- Reset Block with Double Confirmation -->
+        <div class="data-block">
+          <div class="data-block-title">تصفير الجدول</div>
+          <p class="data-block-desc">
+            مسح جميع علامات الإنجاز المسجّلة والبدء من الصفر. لا يمكن التراجع بعد التأكيد إلا إذا كان لديك ملف نسخ احتياطي.
+          </p>
+          <div class="data-actions-row">
+            <button id="reset-step1-btn" type="button" class="action-btn action-btn--danger">
+              <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              <span>مسح جميع العلامات</span>
+            </button>
+          </div>
+
+          <div id="reset-confirm-box" class="reset-confirm-box">
+            <p class="reset-confirm-text">تأكيد نهائي: هل تريد فعلاً مسح جميع المحاضرات المكتملة وسجل الأيام بالكامل؟</p>
+            <div class="data-actions-row">
+              <button id="reset-confirm-btn" type="button" class="action-btn action-btn--danger-solid">نعم، امسح الكل</button>
+              <button id="reset-cancel-btn" type="button" class="action-btn">إلغاء</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SUBTLE UNDO SNACKBAR (5 SECONDS) ==================== -->
+  <div id="undo-toast" class="toast-wrap" role="status" aria-live="polite">
+    <div class="toast-bar">
+      <span id="toast-text">تم التحديث</span>
+      <button id="toast-undo-btn" type="button" class="toast-undo-btn">تراجع</button>
+    </div>
+  </div>
+
+  <textarea id="clipboard-helper" class="sr-only-copy" aria-hidden="true"></textarea>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =======================================================================
+         1. FIXED SUBJECT DEFINITIONS & CONSTANTS
+      ======================================================================= */
+      const STORAGE_KEY = 'rescue_plan_v2';
+      const PWA_DOWNLOADED_KEY = 'rescue_plan_pwa_downloaded_v1';
+      const PWA_INSTALLED_KEY = 'rescue_plan_pwa_installed_v1';
+      const EGYPT_TZ = 'Africa/Cairo';
+
+      const SUBJECTS = [
+        { id: 'physics',   name: 'الفيزياء', count: 15, dotColor: 'var(--dot-physics)' },
+        { id: 'chemistry', name: 'الكيمياء', count: 15, dotColor: 'var(--dot-chemistry)' },
+        { id: 'arabic',    name: 'العربي',   count: 19, dotColor: 'var(--dot-arabic)' },
+        { id: 'biology',   name: 'الأحياء',  count: 34, dotColor: 'var(--dot-biology)' }
+      ];
+
+      const TOTAL_LECTURES = SUBJECTS.reduce((sum, s) => sum + s.count, 0); // 83
+
+      const SUBJECT_MAP = SUBJECTS.reduce((acc, s) => {
+        acc[s.id] = s;
+        return acc;
+      }, {});
+
+      const ARABIC_WEEKDAYS = [
+        'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'
+      ];
+
+      const ARABIC_MONTHS = [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      ];
+
+      const LOCK_ICON_SVG = '<svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>';
+
+      /* =======================================================================
+         2. STRICT AFRICA/CAIRO TIMEZONE ENGINE
+      ======================================================================= */
+      const cairoPartsFormatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: EGYPT_TZ,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+      });
+
+      function getCairoNow() {
+        const parts = cairoPartsFormatter.formatToParts(new Date());
+        const map = {};
+        for (let i = 0; i < parts.length; i++) {
+          map[parts[i].type] = parts[i].value;
+        }
+
+        const year = parseInt(map.year, 10);
+        const month = parseInt(map.month, 10);
+        const day = parseInt(map.day, 10);
+        const hour = parseInt(map.hour, 10) % 24;
+        const minute = parseInt(map.minute, 10);
+        const second = parseInt(map.second, 10);
+
+        const isoDate = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        const elapsedSec = hour * 3600 + minute * 60 + second;
+        const remainingSec = Math.max(0, 86400 - elapsedSec);
+        const remH = Math.floor(remainingSec / 3600);
+        const remM = Math.floor((remainingSec % 3600) / 60);
+        const remS = remainingSec % 60;
+
+        const countdownText =
+          `${String(remH).padStart(2, '0')}:${String(remM).padStart(2, '0')}:${String(remS).padStart(2, '0')}`;
+
+        return {
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          isoDate,
+          countdownText
+        };
+      }
+
+      function parseIsoToUtcDayNumber(isoStr) {
+        const parts = isoStr.split('-');
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const d = parseInt(parts[2], 10);
+        return Math.floor(Date.UTC(y, m, d) / 86400000);
+      }
+
+      function shiftIsoDate(isoStr, deltaDays) {
+        const parts = isoStr.split('-');
+        const dt = new Date(Date.UTC(
+          parseInt(parts[0], 10),
+          parseInt(parts[1], 10) - 1,
+          parseInt(parts[2], 10) + deltaDays
+        ));
+        const y = dt.getUTCFullYear();
+        const m = String(dt.getUTCMonth() + 1).padStart(2, '0');
+        const d = String(dt.getUTCDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+
+      function getInclusiveDaysRemaining(cairoNow) {
+        const deadlineIso = `${String(cairoNow.year).padStart(4, '0')}-12-31`;
+        const todayNum = parseIsoToUtcDayNumber(cairoNow.isoDate);
+        const deadlineNum = parseIsoToUtcDayNumber(deadlineIso);
+        const diff = deadlineNum - todayNum + 1;
+        return Math.max(0, diff);
+      }
+
+      function formatArabicShortDate(isoStr, todayIso) {
+        if (!isoStr) return '';
+        if (isoStr === todayIso) return 'اليوم';
+        const parts = isoStr.split('-');
+        if (parts.length !== 3) return isoStr;
+        const mIdx = parseInt(parts[1], 10) - 1;
+        const dayNum = parseInt(parts[2], 10);
+        return `${dayNum} ${ARABIC_MONTHS[mIdx] || ''}`;
+      }
+
+      function formatArabicFullDate(isoStr) {
+        const parts = isoStr.split('-');
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const d = parseInt(parts[2], 10);
+        const weekdayIdx = new Date(Date.UTC(y, m, d)).getUTCDay();
+        return `${ARABIC_WEEKDAYS[weekdayIdx]}، ${d} ${ARABIC_MONTHS[m]}`;
+      }
+
+      /* =======================================================================
+         3. STATE & PERSISTENCE (WITH NOV 27 PERMANENT SEED + LOCK SUPPORT)
+      ======================================================================= */
+      let state = {
+        completed: {}, // key: "physics_1" -> { date: "YYYY-MM-DD", ts: number, locked: boolean }
+        nov27Seeded: false
+      };
+
+      let activeFilter = 'all';         // 'all' | 'remaining' | 'completed'
+      let activeSubjectMobile = 'all';  // 'all' | subject.id
+      let lastKnownCairoDate = getCairoNow().isoDate;
+
+      // Undo buffer
+      let lastAction = null;
+      let toastTimer = null;
+
+      function isValidLectureKey(key) {
+        if (typeof key !== 'string') return false;
+        const parts = key.split('_');
+        if (parts.length !== 2) return false;
+        const subj = SUBJECT_MAP[parts[0]];
+        const num = Number(parts[1]);
+        return Boolean(subj && Number.isInteger(num) && num >= 1 && num <= subj.count);
+      }
+
+      function sanitizeCompletedMap(rawCompleted, todayIso) {
+        const clean = {};
+        if (!rawCompleted || typeof rawCompleted !== 'object') return clean;
+
+        Object.keys(rawCompleted).forEach((key) => {
+          if (!isValidLectureKey(key)) return;
+          const val = rawCompleted[key];
+          if (typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+            clean[key] = { date: val, ts: Date.now(), locked: val < todayIso };
+          } else if (val && typeof val === 'object' && typeof val.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val.date)) {
+            const isLocked = typeof val.locked === 'boolean' ? val.locked : (val.date < todayIso);
+            clean[key] = {
+              date: val.date,
+              ts: typeof val.ts === 'number' ? val.ts : Date.now(),
+              locked: isLocked
+            };
+          }
+        });
+        return clean;
+      }
+
+      function loadState() {
+        const cairoNow = getCairoNow();
+        const nov27Iso = `${String(cairoNow.year).padStart(4, '0')}-11-27`;
+
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            state.completed = sanitizeCompletedMap(parsed.completed || parsed, cairoNow.isoDate);
+            state.nov27Seeded = Boolean(parsed.nov27Seeded);
+          }
+        } catch (err) {
+          console.error('Failed to read localStorage:', err);
+          state.completed = {};
+          state.nov27Seeded = false;
+        }
+
+        // One-time seed: ensure Physics 1 & Chemistry 1 are permanently locked on Nov 27
+        if (!state.nov27Seeded) {
+          state.completed['physics_1'] = {
+            date: nov27Iso,
+            ts: Date.UTC(cairoNow.year, 10, 27, 18, 0, 0),
+            locked: true
+          };
+          state.completed['chemistry_1'] = {
+            date: nov27Iso,
+            ts: Date.UTC(cairoNow.year, 10, 27, 20, 0, 0),
+            locked: true
+          };
+          state.nov27Seeded = true;
+          saveState();
+        }
+      }
+
+      function saveState() {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            version: 3,
+            nov27Seeded: state.nov27Seeded,
+            updatedAt: Date.now(),
+            completed: state.completed
+          }));
+        } catch (err) {
+          console.error('Failed to save localStorage:', err);
+        }
+      }
+
+      function getPendingKeys() {
+        const list = [];
+        SUBJECTS.forEach((subj) => {
+          for (let i = 1; i <= subj.count; i++) {
+            const key = `${subj.id}_${i}`;
+            const entry = state.completed[key];
+            if (entry && !entry.locked) {
+              list.push({ key, subj, num: i, entry });
+            }
+          }
+        });
+        return list;
+      }
+
+      /* =======================================================================
+         4. METRICS & DYNAMIC DAILY PACE CALCULATIONS
+      ======================================================================= */
+      function computeMetrics(cairoNow) {
+        const cairoIsoDate = cairoNow.isoDate;
+        let completedTotal = 0;
+        let completedToday = 0;
+        let pendingCount = 0;
+        const activeDatesSet = new Set();
+        const perSubject = {};
+
+        SUBJECTS.forEach((subj) => {
+          let done = 0;
+          for (let i = 1; i <= subj.count; i++) {
+            const entry = state.completed[`${subj.id}_${i}`];
+            if (entry) {
+              done++;
+              completedTotal++;
+              if (!entry.locked) {
+                pendingCount++;
+                completedToday++;
+                activeDatesSet.add(cairoIsoDate);
+              } else {
+                activeDatesSet.add(entry.date);
+                if (entry.date === cairoIsoDate) {
+                  completedToday++;
+                }
+              }
+            }
+          }
+          const pct = Math.round((done / subj.count) * 100);
+          perSubject[subj.id] = {
+            total: subj.count,
+            completed: done,
+            remaining: subj.count - done,
+            percent: pct
+          };
+        });
+
+        const remainingTotal = TOTAL_LECTURES - completedTotal;
+        const overallPercent = Math.round((completedTotal / TOTAL_LECTURES) * 100);
+        const daysRemaining = getInclusiveDaysRemaining(cairoNow);
+
+        const livePace = daysRemaining > 0
+          ? (remainingTotal / daysRemaining)
+          : remainingTotal;
+
+        const tomorrowPace = daysRemaining > 1
+          ? (remainingTotal / (daysRemaining - 1))
+          : remainingTotal;
+
+        const remainingAtStartOfToday = remainingTotal + completedToday;
+        const todayTarget = daysRemaining > 0
+          ? Math.ceil(remainingAtStartOfToday / daysRemaining)
+          : remainingAtStartOfToday;
+
+        let streak = 0;
+        let cursor = activeDatesSet.has(cairoIsoDate)
+          ? cairoIsoDate
+          : shiftIsoDate(cairoIsoDate, -1);
+
+        while (activeDatesSet.has(cursor)) {
+          streak++;
+          cursor = shiftIsoDate(cursor, -1);
+        }
+
+        let lowestSubjectId = null;
+        if (completedTotal > 0 && remainingTotal > 0) {
+          let minPct = Infinity;
+          let maxPct = -1;
+          SUBJECTS.forEach((subj) => {
+            const p = perSubject[subj.id].percent;
+            if (p < minPct) {
+              minPct = p;
+              lowestSubjectId = subj.id;
+            }
+            if (p > maxPct) maxPct = p;
+          });
+          if (minPct === maxPct) lowestSubjectId = null;
+        }
+
+        return {
+          completedTotal,
+          remainingTotal,
+          overallPercent,
+          completedToday,
+          pendingCount,
+          todayTarget,
+          daysRemaining,
+          livePace,
+          tomorrowPace,
+          streak,
+          perSubject,
+          lowestSubjectId
+        };
+      }
+
+      /* =======================================================================
+         5. RENDERING
+      ======================================================================= */
+      const els = {
+        cairoFullDate: document.getElementById('cairo-full-date'),
+        overallPercentBadge: document.getElementById('overall-percent-badge'),
+        metricCompleted: document.getElementById('metric-completed'),
+        metricRemaining: document.getElementById('metric-remaining'),
+        metricLivePace: document.getElementById('metric-live-pace'),
+        metricTomorrowPace: document.getElementById('metric-tomorrow-pace'),
+        todayStatusTag: document.getElementById('today-status-tag'),
+        metricTodayDone: document.getElementById('metric-today-done'),
+        metricTodayTarget: document.getElementById('metric-today-target'),
+        midnightCountdown: document.getElementById('midnight-countdown'),
+        metricDaysLeft: document.getElementById('metric-days-left'),
+        metricStreak: document.getElementById('metric-streak'),
+        overallProgressbar: document.getElementById('overall-progressbar'),
+        overallFill: document.getElementById('overall-fill'),
+        overallBarText: document.getElementById('overall-bar-text'),
+        countAll: document.getElementById('count-all'),
+        countRemaining: document.getElementById('count-remaining'),
+        countCompleted: document.getElementById('count-completed'),
+        subjectPills: document.getElementById('subject-pills'),
+        boardGrid: document.getElementById('board-grid'),
+        directInstallBtn: document.getElementById('direct-install-btn'),
+        downloadPwaOnceBtn: document.getElementById('download-pwa-once-btn'),
+        openConfirmBtn: document.getElementById('open-confirm-btn'),
+        confirmBtnLabel: document.getElementById('confirm-btn-label'),
+        confirmBtnCount: document.getElementById('confirm-btn-count'),
+        confirmModal: document.getElementById('confirm-modal'),
+        confirmModalDateTitle: document.getElementById('confirm-modal-date-title'),
+        confirmPendingTags: document.getElementById('confirm-pending-tags'),
+        confirmLockFinalBtn: document.getElementById('confirm-lock-final-btn'),
+        logModal: document.getElementById('log-modal'),
+        logModalBody: document.getElementById('log-modal-body'),
+        dataModal: document.getElementById('data-modal'),
+        dataStatusMsg: document.getElementById('data-status-msg'),
+        resetConfirmBox: document.getElementById('reset-confirm-box'),
+        undoToast: document.getElementById('undo-toast'),
+        toastText: document.getElementById('toast-text'),
+        toastUndoBtn: document.getElementById('toast-undo-btn')
+      };
+
+      function formatPaceNum(val) {
+        if (val <= 0) return '0.0';
+        return val.toFixed(1);
+      }
+
+      function renderConfirmDock(metrics) {
+        const count = metrics.pendingCount;
+        els.confirmBtnCount.textContent = count;
+        if (count > 0) {
+          els.openConfirmBtn.classList.add('has-pending');
+          els.confirmBtnLabel.textContent = 'تأكيد وحفظ';
+        } else {
+          els.openConfirmBtn.classList.remove('has-pending');
+          els.confirmBtnLabel.textContent = 'تأكيد الإنجاز';
+        }
+      }
+
+      function renderMetrics(metrics, cairoNow) {
+        els.cairoFullDate.textContent = formatArabicFullDate(cairoNow.isoDate);
+
+        // Card 1: Overall Progress
+        els.overallPercentBadge.textContent = `${metrics.overallPercent}%`;
+        els.overallPercentBadge.className = metrics.overallPercent === 100
+          ? 'metric-tag metric-tag--done tabular'
+          : 'metric-tag tabular';
+        els.metricCompleted.textContent = metrics.completedTotal;
+        els.metricRemaining.textContent = metrics.remainingTotal === 0
+          ? 'اكتملت الخطة'
+          : `${metrics.remainingTotal} محاضرة`;
+
+        // Card 2: Dynamic Daily Pace
+        els.metricLivePace.textContent = formatPaceNum(metrics.livePace);
+        if (metrics.remainingTotal === 0) {
+          els.metricTomorrowPace.textContent = '0.0 / يوم';
+        } else if (metrics.daysRemaining <= 1) {
+          els.metricTomorrowPace.textContent = 'اليوم الأخير';
+        } else {
+          els.metricTomorrowPace.textContent = `${formatPaceNum(metrics.tomorrowPace)} / يوم`;
+        }
+
+        // Card 3: Today Target & Status
+        els.metricTodayDone.textContent = metrics.completedToday;
+        els.metricTodayTarget.textContent = `/ ${metrics.todayTarget} محاضرة`;
+
+        if (metrics.remainingTotal === 0) {
+          els.todayStatusTag.textContent = 'اكتمل الكل';
+          els.todayStatusTag.className = 'metric-tag metric-tag--done';
+        } else if (metrics.todayTarget > 0 && metrics.completedToday >= metrics.todayTarget) {
+          els.todayStatusTag.textContent = 'تم إنجاز هدف اليوم';
+          els.todayStatusTag.className = 'metric-tag metric-tag--done';
+        } else {
+          const leftForToday = Math.max(0, metrics.todayTarget - metrics.completedToday);
+          els.todayStatusTag.textContent = `متبقي ${leftForToday}`;
+          els.todayStatusTag.className = 'metric-tag tabular';
+        }
+
+        els.midnightCountdown.textContent = cairoNow.countdownText;
+
+        // Card 4: Remaining Plan Days & Streak
+        els.metricDaysLeft.textContent = metrics.daysRemaining;
+        els.metricStreak.textContent = metrics.streak === 1 ? 'يوم واحد' : `${metrics.streak} يوم`;
+
+        // Unified Overall Bar
+        els.overallFill.style.width = `${metrics.overallPercent}%`;
+        els.overallProgressbar.setAttribute('aria-valuenow', String(metrics.overallPercent));
+        els.overallBarText.textContent = `${metrics.completedTotal} من ${TOTAL_LECTURES} مكتمل`;
+
+        // Filter Counts
+        els.countAll.textContent = TOTAL_LECTURES;
+        els.countRemaining.textContent = metrics.remainingTotal;
+        els.countCompleted.textContent = metrics.completedTotal;
+
+        // Permanent Confirm Dock
+        renderConfirmDock(metrics);
+      }
+
+      function renderSubjectPills(metrics) {
+        const pills = [
+          `<button type="button" class="subj-pill ${activeSubjectMobile === 'all' ? 'is-active' : ''}" data-subj-pill="all">كل المواد</button>`
+        ];
+
+        SUBJECTS.forEach((subj) => {
+          const s = metrics.perSubject[subj.id];
+          const isAct = activeSubjectMobile === subj.id;
+          pills.push(`
+            <button type="button" class="subj-pill ${isAct ? 'is-active' : ''}" data-subj-pill="${subj.id}">
+              <span class="subject-dot" style="background-color:${subj.dotColor};"></span>
+              <span>${subj.name}</span>
+              <span class="tabular" style="color:var(--text-muted);font-size:0.7rem;">${s.completed}/${s.total}</span>
+            </button>
+          `);
+        });
+
+        els.subjectPills.innerHTML = pills.join('');
+      }
+
+      function renderBoard(metrics, todayIso) {
+        const isNarrow = window.innerWidth < 960;
+        const visibleSubjects = (isNarrow && activeSubjectMobile !== 'all')
+          ? SUBJECTS.filter((s) => s.id === activeSubjectMobile)
+          : SUBJECTS;
+
+        const fragment = document.createDocumentFragment();
+
+        visibleSubjects.forEach((subj) => {
+          const sMetric = metrics.perSubject[subj.id];
+          const col = document.createElement('section');
+          col.className = 'subject-column';
+          col.setAttribute('aria-label', subj.name);
+
+          const rowsHtml = [];
+          for (let i = 1; i <= subj.count; i++) {
+            const key = `${subj.id}_${i}`;
+            const entry = state.completed[key];
+            const isChecked = Boolean(entry);
+            const isLocked = Boolean(entry && entry.locked);
+            const isPending = Boolean(entry && !entry.locked);
+
+            if (activeFilter === 'remaining' && isChecked) continue;
+            if (activeFilter === 'completed' && !isChecked) continue;
+
+            let stateClass = '';
+            let badgeHtml = '';
+
+            if (isLocked) {
+              stateClass = 'is-completed';
+              const dateStr = formatArabicShortDate(entry.date, todayIso);
+              badgeHtml = `<span class="lecture-date tabular">${LOCK_ICON_SVG}<span>${dateStr}</span></span>`;
+            } else if (isPending) {
+              stateClass = 'is-pending';
+              badgeHtml = `<span class="lecture-date tabular">بانتظار التأكيد</span>`;
+            }
+
+            rowsHtml.push(`
+              <button type="button"
+                class="lecture-row ${stateClass}"
+                data-key="${key}"
+                aria-pressed="${isChecked}">
+                <span class="lecture-start">
+                  <span class="checkbox-box" aria-hidden="true">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                  </span>
+                  <span class="lecture-label tabular">محاضرة ${i}</span>
+                </span>
+                ${badgeHtml}
+              </button>
+            `);
+          }
+
+          const listInner = rowsHtml.length > 0
+            ? rowsHtml.join('')
+            : `<div class="empty-column">${activeFilter === 'remaining' ? 'اكتملت جميع محاضرات هذه المادة' : 'لا توجد محاضرات مكتملة بعد'}</div>`;
+
+          const priorityTag = metrics.lowestSubjectId === subj.id
+            ? `<span class="subject-priority-tag">الأقل إنجازاً</span>`
+            : '';
+
+          col.innerHTML = `
+            <div class="subject-header">
+              <div class="subject-title-row">
+                <div class="subject-name-wrap">
+                  <span class="subject-dot" style="background-color:${subj.dotColor};"></span>
+                  <h2 class="subject-name">${subj.name}</h2>
+                </div>
+                ${priorityTag}
+              </div>
+              <div class="subject-stats-row tabular">
+                <span class="subject-stats-count"><strong>${sMetric.completed}</strong> / ${sMetric.total}</span>
+                <span>${sMetric.percent}%</span>
+              </div>
+              <div class="subject-track">
+                <div class="subject-fill" style="width:${sMetric.percent}%;"></div>
+              </div>
+            </div>
+            <div class="lecture-list">${listInner}</div>
+          `;
+
+          fragment.appendChild(col);
+        });
+
+        els.boardGrid.innerHTML = '';
+        els.boardGrid.appendChild(fragment);
+      }
+
+      function renderAll() {
+        const cairoNow = getCairoNow();
+        lastKnownCairoDate = cairoNow.isoDate;
+        const metrics = computeMetrics(cairoNow);
+        renderMetrics(metrics, cairoNow);
+        renderSubjectPills(metrics);
+        renderBoard(metrics, cairoNow.isoDate);
+      }
+
+      /* =======================================================================
+         6. LIVE CLOCK & AUTOMATIC MIDNIGHT CUTOFF DETECTOR (Africa/Cairo)
+      ======================================================================= */
+      function tickCairoClock() {
+        const cairoNow = getCairoNow();
+        els.midnightCountdown.textContent = cairoNow.countdownText;
+
+        if (cairoNow.isoDate !== lastKnownCairoDate) {
+          renderAll();
+          if (els.logModal.classList.contains('is-open')) {
+            renderDailyLogModal();
+          }
+        }
+      }
+
+      /* =======================================================================
+         7. INTERACTIONS, LOCK GUARD, CONFIRMATION & UNDO SNACKBAR
+      ======================================================================= */
+      function showUndoToast(message, undoPayload) {
+        lastAction = undoPayload;
+        els.toastText.textContent = message;
+        els.toastUndoBtn.style.display = undoPayload ? 'inline-block' : 'none';
+        els.undoToast.classList.add('is-visible');
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          els.undoToast.classList.remove('is-visible');
+          lastAction = null;
+        }, 5000);
+      }
+
+      function hideToast() {
+        clearTimeout(toastTimer);
+        els.undoToast.classList.remove('is-visible');
+        lastAction = null;
+      }
+
+      function toggleLecture(key, rowEl) {
+        if (!isValidLectureKey(key)) return;
+        const [subjId, numStr] = key.split('_');
+        const subj = SUBJECT_MAP[subjId];
+        const prevEntry = state.completed[key] ? { ...state.completed[key] } : null;
+
+        // Permanently locked items cannot be unchecked
+        if (prevEntry && prevEntry.locked) {
+          if (rowEl) {
+            rowEl.classList.remove('is-locked-shake');
+            void rowEl.offsetWidth;
+            rowEl.classList.add('is-locked-shake');
+          }
+          const dateLabel = formatArabicShortDate(prevEntry.date, getCairoNow().isoDate);
+          showUndoToast(`مقفولة نهائياً (${subj.name} — محاضرة ${numStr} • ${dateLabel})`, null);
+          return;
+        }
+
+        if (prevEntry) {
+          delete state.completed[key];
+          saveState();
+          renderAll();
+          showUndoToast(`تم إلغاء تحديد ${subj.name} — محاضرة ${numStr}`, { key, prevEntry });
+        } else {
+          const cairoNow = getCairoNow();
+          state.completed[key] = { date: cairoNow.isoDate, ts: Date.now(), locked: false };
+          saveState();
+          renderAll();
+          showUndoToast(`تم تحديد ${subj.name} — محاضرة ${numStr} (اضغط تأكيد لقفلها)`, { key, prevEntry: null });
+        }
+      }
+
+      function handleUndo() {
+        if (!lastAction) return;
+        const { key, prevEntry } = lastAction;
+        const current = state.completed[key];
+        if (current && current.locked) {
+          hideToast();
+          return;
+        }
+        if (prevEntry) {
+          state.completed[key] = prevEntry;
+        } else {
+          delete state.completed[key];
+        }
+        saveState();
+        renderAll();
+        hideToast();
+      }
+
+      function openConfirmModal() {
+        const pending = getPendingKeys();
+        if (pending.length === 0) {
+          showUndoToast('علّم على المحاضرات التي أنجزتها أولاً ثم اضغط تأكيد', null);
+          return;
+        }
+
+        const cairoNow = getCairoNow();
+        const countLabel = pending.length === 1
+          ? 'محاضرة واحدة'
+          : (pending.length === 2 ? 'محاضرتان' : `${pending.length} محاضرات`);
+
+        els.confirmModalDateTitle.textContent = `سيتم تسجيل ${countLabel} بتاريخ: ${formatArabicFullDate(cairoNow.isoDate)}`;
+        els.confirmPendingTags.innerHTML = pending.map((item) => `
+          <span class="log-tag">
+            <span class="subject-dot" style="background-color:${item.subj.dotColor};"></span>
+            <span>${item.subj.name} • محاضرة ${item.num}</span>
+          </span>
+        `).join('');
+
+        openModal('confirm-modal');
+      }
+
+      function commitConfirmLock() {
+        const pending = getPendingKeys();
+        if (pending.length === 0) {
+          closeModal('confirm-modal');
+          return;
+        }
+
+        const cairoNow = getCairoNow();
+        const confirmDate = cairoNow.isoDate;
+        const nowTs = Date.now();
+
+        pending.forEach((item, idx) => {
+          state.completed[item.key] = {
+            date: confirmDate,
+            ts: nowTs + idx,
+            locked: true
+          };
+        });
+
+        saveState();
+        renderAll();
+        closeModal('confirm-modal');
+
+        const countLabel = pending.length === 1
+          ? 'محاضرة واحدة'
+          : (pending.length === 2 ? 'محاضرتين' : `${pending.length} محاضرات`);
+        showUndoToast(`تم تأكيد وقفل ${countLabel} نهائياً بتاريخ ${formatArabicShortDate(confirmDate, confirmDate)}`, null);
+      }
+
+      /* =======================================================================
+         8. CLEAN ONE-CLICK PWA 4-FILE DOWNLOADER & AUTO-HIDING INSTALL BUTTON
+      ======================================================================= */
+      function drawRoundedRectPath(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      function renderAppIconToCanvas(canvas, size) {
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        ctx.fillStyle = '#0b0d10';
+        ctx.fillRect(0, 0, size, size);
+
+        const radial = ctx.createRadialGradient(
+          size * 0.5, size * 0.36, size * 0.04,
+          size * 0.5, size * 0.5, size * 0.62
+        );
+        radial.addColorStop(0, '#162521');
+        radial.addColorStop(0.55, '#10141c');
+        radial.addColorStop(1, '#0b0d10');
+        ctx.fillStyle = radial;
+        ctx.fillRect(0, 0, size, size);
+
+        const pad = Math.round(size * 0.075);
+        const cardSize = size - pad * 2;
+        const cornerR = Math.round(size * 0.21);
+
+        drawRoundedRectPath(ctx, pad, pad, cardSize, cardSize, cornerR);
+        ctx.fillStyle = '#11161f';
+        ctx.fill();
+
+        ctx.lineWidth = Math.max(2, Math.round(size * 0.014));
+        ctx.strokeStyle = 'rgba(52, 211, 153, 0.38)';
+        ctx.stroke();
+
+        const badgeW = size * 0.34;
+        const badgeH = size * 0.30;
+        const badgeX = (size - badgeW) * 0.5;
+        const badgeY = size * 0.21;
+        const badgeR = size * 0.08;
+
+        drawRoundedRectPath(ctx, badgeX, badgeY, badgeW, badgeH, badgeR);
+        const badgeGrad = ctx.createLinearGradient(badgeX, badgeY, badgeX + badgeW, badgeY + badgeH);
+        badgeGrad.addColorStop(0, '#10b981');
+        badgeGrad.addColorStop(1, '#059669');
+        ctx.fillStyle = badgeGrad;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(badgeX + badgeW * 0.27, badgeY + badgeH * 0.52);
+        ctx.lineTo(badgeX + badgeW * 0.44, badgeY + badgeH * 0.69);
+        ctx.lineTo(badgeX + badgeW * 0.74, badgeY + badgeH * 0.33);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = Math.max(3, size * 0.042);
+        ctx.strokeStyle = '#06130e';
+        ctx.stroke();
+
+        ctx.fillStyle = '#f1f5f9';
+        ctx.font = `700 ${Math.round(size * 0.21)}px system-ui, -apple-system, "Segoe UI", Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('83', size * 0.5, size * 0.665);
+
+        const dotColors = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399'];
+        const dotR = Math.max(2, size * 0.019);
+        const dotGap = size * 0.072;
+        const startX = size * 0.5 - ((dotColors.length - 1) * dotGap) * 0.5;
+        const dotY = size * 0.815;
+
+        dotColors.forEach((color, idx) => {
+          ctx.beginPath();
+          ctx.arc(startX + idx * dotGap, dotY, dotR, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.fill();
+        });
+      }
+
+      function buildManifestContent() {
+        return JSON.stringify({
+          name: 'خطة الإنقاذ - متابعة المحاضرات',
+          short_name: 'خطة الإنقاذ',
+          description: 'جدول متابعة المحاضرات اليومي وخطة إنجاز ديسمبر بتوقيت مصر',
+          start_url: './',
+          scope: './',
+          display: 'standalone',
+          orientation: 'any',
+          dir: 'rtl',
+          lang: 'ar',
+          background_color: '#0b0d10',
+          theme_color: '#0b0d10',
+          icons: [
+            { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+            { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          ]
+        }, null, 2);
+      }
+
+      function buildServiceWorkerContent() {
+        return [
+          "const CACHE_NAME = 'rescue-plan-pwa-v2';",
+          "const CORE_ASSETS = [",
+          "  './',",
+          "  './index.html',",
+          "  './manifest.json',",
+          "  './icon-192.png',",
+          "  './icon-512.png'",
+          "];",
+          "",
+          "self.addEventListener('install', (event) => {",
+          "  event.waitUntil(",
+          "    caches.open(CACHE_NAME)",
+          "      .then((cache) => cache.addAll(CORE_ASSETS))",
+          "      .then(() => self.skipWaiting())",
+          "  );",
+          "});",
+          "",
+          "self.addEventListener('activate', (event) => {",
+          "  event.waitUntil(",
+          "    caches.keys()",
+          "      .then((keys) => Promise.all(",
+          "        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))",
+          "      ))",
+          "      .then(() => self.clients.claim())",
+          "  );",
+          "});",
+          "",
+          "self.addEventListener('fetch', (event) => {",
+          "  const req = event.request;",
+          "  if (req.method !== 'GET') return;",
+          "  const url = new URL(req.url);",
+          "  if (url.origin !== self.location.origin) return;",
+          "  if (req.mode === 'navigate' || url.pathname.endsWith('.html')) {",
+          "    event.respondWith(",
+          "      fetch(req)",
+          "        .then((res) => {",
+          "          const copy = res.clone();",
+          "          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));",
+          "          return res;",
+          "        })",
+          "        .catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))",
+          "    );",
+          "    return;",
+          "  }",
+          "  event.respondWith(",
+          "    caches.match(req).then((cached) => {",
+          "      if (cached) return cached;",
+          "      return fetch(req).then((res) => {",
+          "        const copy = res.clone();",
+          "        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));",
+          "        return res;",
+          "      });",
+          "    })",
+          "  );",
+          "});",
+          ""
+        ].join('\n');
+      }
+
+      function triggerBlobDownload(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }
+
+      function downloadIconPng(size, filename) {
+        const offscreen = document.createElement('canvas');
+        renderAppIconToCanvas(offscreen, size);
+        offscreen.toBlob((blob) => {
+          if (blob) triggerBlobDownload(blob, filename);
+        }, 'image/png');
+      }
+
+      function downloadTextFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        triggerBlobDownload(blob, filename);
+      }
+
+      function isRunningStandalone() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      }
+
+      function safeGetFlag(key) {
+        try { return window.localStorage.getItem(key) === '1'; } catch (e) { return false; }
+      }
+
+      function safeSetFlag(key) {
+        try { window.localStorage.setItem(key, '1'); } catch (e) {}
+      }
+
+      function downloadAllFourPwaFilesOnce() {
+        safeSetFlag(PWA_DOWNLOADED_KEY);
+        els.downloadPwaOnceBtn.style.display = 'none';
+
+        downloadIconPng(192, 'icon-192.png');
+        setTimeout(() => downloadIconPng(512, 'icon-512.png'), 450);
+        setTimeout(() => downloadTextFile(buildManifestContent(), 'manifest.json', 'application/manifest+json;charset=utf-8'), 900);
+        setTimeout(() => {
+          downloadTextFile(buildServiceWorkerContent(), 'sw.js', 'application/javascript;charset=utf-8');
+          showUndoToast('تم تحميل الـ 4 ملفات — ارفعهم على GitHub جنب index.html', null);
+        }, 1350);
+      }
+
+      let deferredInstallPrompt = null;
+
+      async function initSmartPwaButtons() {
+        if (isRunningStandalone()) {
+          safeSetFlag(PWA_INSTALLED_KEY);
+          safeSetFlag(PWA_DOWNLOADED_KEY);
+          els.downloadPwaOnceBtn.style.display = 'none';
+          els.directInstallBtn.style.display = 'none';
+          return;
+        }
+
+        if (safeGetFlag(PWA_INSTALLED_KEY)) {
+          els.directInstallBtn.style.display = 'none';
+        }
+
+        if (safeGetFlag(PWA_DOWNLOADED_KEY)) {
+          els.downloadPwaOnceBtn.style.display = 'none';
+          return;
+        }
+
+        // Check if PWA files are already hosted on GitHub; if yes, keep download button hidden
+        try {
+          const res = await fetch('./manifest.json', { cache: 'no-store' });
+          if (res.ok) {
+            safeSetFlag(PWA_DOWNLOADED_KEY);
+            els.downloadPwaOnceBtn.style.display = 'none';
+            return;
+          }
+        } catch (e) {
+          // Not hosted yet
+        }
+
+        els.downloadPwaOnceBtn.style.display = 'inline-flex';
+      }
+
+      async function triggerNativeInstallPrompt() {
+        if (!deferredInstallPrompt) return;
+        try {
+          deferredInstallPrompt.prompt();
+          const choice = await deferredInstallPrompt.userChoice;
+          if (choice && choice.outcome === 'accepted') {
+            deferredInstallPrompt = null;
+            safeSetFlag(PWA_INSTALLED_KEY);
+            safeSetFlag(PWA_DOWNLOADED_KEY);
+            els.directInstallBtn.style.display = 'none';
+            els.downloadPwaOnceBtn.style.display = 'none';
+            showUndoToast('تم تثبيت التطبيق بنجاح!', null);
+          }
+        } catch (err) {
+          console.error('Install prompt error:', err);
+        }
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        if (isRunningStandalone() || safeGetFlag(PWA_INSTALLED_KEY)) return;
+        deferredInstallPrompt = e;
+        els.downloadPwaOnceBtn.style.display = 'none';
+        els.directInstallBtn.style.display = 'inline-flex';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        safeSetFlag(PWA_INSTALLED_KEY);
+        safeSetFlag(PWA_DOWNLOADED_KEY);
+        els.directInstallBtn.style.display = 'none';
+        els.downloadPwaOnceBtn.style.display = 'none';
+      });
+
+      /* =======================================================================
+         9. DAILY LOG MODAL (Grouped by Egypt Date)
+      ======================================================================= */
+      function renderDailyLogModal() {
+        const grouped = {};
+        const pendingItems = [];
+        const keys = Object.keys(state.completed);
+
+        keys.forEach((key) => {
+          const entry = state.completed[key];
+          if (!entry || !entry.date) return;
+          const [subjId, numStr] = key.split('_');
+          const itemObj = {
+            subjId,
+            subj: SUBJECT_MAP[subjId],
+            num: parseInt(numStr, 10),
+            ts: entry.ts || 0
+          };
+          if (!entry.locked) {
+            pendingItems.push(itemObj);
+          } else {
+            if (!grouped[entry.date]) grouped[entry.date] = [];
+            grouped[entry.date].push(itemObj);
+          }
+        });
+
+        const sortedDates = Object.keys(grouped).sort((a, b) => (a < b ? 1 : -1));
+
+        if (sortedDates.length === 0 && pendingItems.length === 0) {
+          els.logModalBody.innerHTML = `<div class="log-empty">لم يتم تسجيل أي محاضرات مكتملة بعد.</div>`;
+          return;
+        }
+
+        const sections = [];
+
+        if (pendingItems.length > 0) {
+          const pLabel = pendingItems.length === 1
+            ? 'محاضرة واحدة'
+            : (pendingItems.length === 2 ? 'محاضرتان' : `${pendingItems.length} محاضرات`);
+          const pTags = pendingItems.sort((a, b) => a.ts - b.ts).map((item) => `
+            <span class="log-tag">
+              <span class="subject-dot" style="background-color:${item.subj.dotColor};"></span>
+              <span>${item.subj.name} • محاضرة ${item.num}</span>
+            </span>
+          `).join('');
+
+          sections.push(`
+            <div class="log-day-card">
+              <div class="log-day-head">
+                <span class="log-day-title">قيد التحديد (بانتظار التأكيد)</span>
+                <span class="log-day-count log-day-count--pending tabular">${pLabel}</span>
+              </div>
+              <div class="log-tags">${pTags}</div>
+            </div>
+          `);
+        }
+
+        const todayIso = getCairoNow().isoDate;
+        sortedDates.forEach((dateStr) => {
+          const items = grouped[dateStr].sort((a, b) => a.ts - b.ts);
+          const countLabel = items.length === 1
+            ? 'محاضرة واحدة'
+            : (items.length === 2 ? 'محاضرتان' : `${items.length} محاضرات`);
+          const dateTitle = dateStr === todayIso
+            ? `${formatArabicFullDate(dateStr)} (اليوم)`
+            : formatArabicFullDate(dateStr);
+
+          const tagsHtml = items.map((item) => `
+            <span class="log-tag">
+              <span class="subject-dot" style="background-color:${item.subj.dotColor};"></span>
+              <span>${item.subj.name} • محاضرة ${item.num}</span>
+            </span>
+          `).join('');
+
+          sections.push(`
+            <div class="log-day-card">
+              <div class="log-day-head">
+                <span class="log-day-title">${dateTitle}</span>
+                <span class="log-day-count tabular">${countLabel}</span>
+              </div>
+              <div class="log-tags">${tagsHtml}</div>
+            </div>
+          `);
+        });
+
+        els.logModalBody.innerHTML = sections.join('');
+      }
+
+      /* =======================================================================
+         10. BACKUP, RESTORE & TWO-STEP RESET MODAL
+      ======================================================================= */
+      function setDataStatus(msg, isError) {
+        els.dataStatusMsg.textContent = msg;
+        els.dataStatusMsg.className = `data-status-msg is-visible ${isError ? 'data-status-msg--err' : 'data-status-msg--ok'}`;
+      }
+
+      function clearDataStatus() {
+        els.dataStatusMsg.className = 'data-status-msg';
+        els.dataStatusMsg.textContent = '';
+      }
+
+      function buildBackupJson() {
+        return JSON.stringify({
+          app: 'december-rescue-plan',
+          version: 3,
+          exportedAtCairo: getCairoNow().isoDate,
+          completed: state.completed
+        }, null, 2);
+      }
+
+      function handleExportJson() {
+        try {
+          const blob = new Blob([buildBackupJson()], { type: 'application/json;charset=utf-8' });
+          triggerBlobDownload(blob, `rescue-plan-backup-${getCairoNow().isoDate}.json`);
+          setDataStatus('تم تنزيل ملف النسخة الاحتياطية بنجاح.', false);
+        } catch (err) {
+          console.error('Export failed:', err);
+          setDataStatus('تعذر تنزيل الملف، استخدم زر "نسخ البيانات" كبديل.', true);
+        }
+      }
+
+      function handleCopyJson() {
+        try {
+          const helper = document.getElementById('clipboard-helper');
+          helper.value = buildBackupJson();
+          helper.select();
+          helper.setSelectionRange(0, helper.value.length);
+          const ok = document.execCommand('copy');
+          if (ok) {
+            setDataStatus('تم نسخ بيانات التقدم إلى الحافظة بنجاح.', false);
+          } else {
+            setDataStatus('لم يتمكن المتصفح من النسخ، جرّب تنزيل ملف JSON.', true);
+          }
+        } catch (err) {
+          console.error('Copy failed:', err);
+          setDataStatus('حدث خطأ أثناء النسخ.', true);
+        }
+      }
+
+      function handleImportFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const parsed = JSON.parse(String(e.target.result || ''));
+            if (!parsed || typeof parsed !== 'object') {
+              throw new Error('Invalid JSON structure');
+            }
+            const sourceMap = parsed.completed && typeof parsed.completed === 'object'
+              ? parsed.completed
+              : parsed;
+            const cleaned = sanitizeCompletedMap(sourceMap, getCairoNow().isoDate);
+            state.completed = cleaned;
+            state.nov27Seeded = true;
+            saveState();
+            renderAll();
+            const restoredCount = Object.keys(cleaned).length;
+            setDataStatus(`تمت الاستعادة بنجاح (${restoredCount} محاضرة مكتملة).`, false);
+          } catch (err) {
+            console.error('Import parse error:', err);
+            setDataStatus('الملف غير صالح أو تالف، تأكد من اختيار ملف النسخ الاحتياطي الصحيح.', true);
+          }
+        };
+        reader.onerror = function () {
+          setDataStatus('تعذر قراءة الملف المحدد.', true);
+        };
+        reader.readAsText(file);
+      }
+
+      /* =======================================================================
+         11. MODAL HELPERS & EVENT LISTENERS
+      ======================================================================= */
+      function openModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('is-open');
+      }
+
+      function closeModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('is-open');
+        if (id === 'data-modal') {
+          els.resetConfirmBox.classList.remove('is-open');
+          clearDataStatus();
+        }
+      }
+
+      // Lecture row toggle (event delegation)
+      els.boardGrid.addEventListener('click', (e) => {
+        const row = e.target.closest('.lecture-row');
+        if (!row) return;
+        toggleLecture(row.dataset.key, row);
+      });
+
+      // Segmented filter buttons
+      document.querySelectorAll('.seg-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeFilter = btn.dataset.filter;
+          document.querySelectorAll('.seg-btn').forEach((b) => {
+            const match = b.dataset.filter === activeFilter;
+            b.classList.toggle('is-active', match);
+            b.setAttribute('aria-selected', String(match));
+          });
+          renderAll();
+        });
+      });
+
+      // Mobile subject filter pills
+      els.subjectPills.addEventListener('click', (e) => {
+        const pill = e.target.closest('.subj-pill');
+        if (!pill) return;
+        activeSubjectMobile = pill.dataset.subjPill;
+        renderAll();
+      });
+
+      // Undo button
+      els.toastUndoBtn.addEventListener('click', handleUndo);
+
+      // Permanent Confirm Dock & Confirm Modal
+      els.openConfirmBtn.addEventListener('click', openConfirmModal);
+      els.confirmLockFinalBtn.addEventListener('click', commitConfirmLock);
+
+      // PWA Auto-Hiding Buttons
+      els.directInstallBtn.addEventListener('click', triggerNativeInstallPrompt);
+      els.downloadPwaOnceBtn.addEventListener('click', downloadAllFourPwaFilesOnce);
+
+      // Daily Log & Data modals
+      document.getElementById('open-log-btn').addEventListener('click', () => {
+        renderDailyLogModal();
+        openModal('log-modal');
+      });
+
+      document.getElementById('open-data-btn').addEventListener('click', () => {
+        clearDataStatus();
+        els.resetConfirmBox.classList.remove('is-open');
+        openModal('data-modal');
+      });
+
+      // Close modal buttons & backdrop click
+      document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+        btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
+      });
+
+      [els.confirmModal, els.logModal, els.dataModal].forEach((backdrop) => {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) closeModal(backdrop.id);
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal('confirm-modal');
+          closeModal('log-modal');
+          closeModal('data-modal');
+        }
+      });
+
+      // Backup / Import / Two-step Reset buttons
+      document.getElementById('export-json-btn').addEventListener('click', handleExportJson);
+      document.getElementById('copy-json-btn').addEventListener('click', handleCopyJson);
+
+      const fileInput = document.getElementById('import-file-input');
+      document.getElementById('import-json-btn').addEventListener('click', () => {
+        fileInput.value = '';
+        fileInput.click();
+      });
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleImportFile(e.target.files[0]);
+        }
+      });
+
+      document.getElementById('reset-step1-btn').addEventListener('click', () => {
+        els.resetConfirmBox.classList.add('is-open');
+      });
+      document.getElementById('reset-cancel-btn').addEventListener('click', () => {
+        els.resetConfirmBox.classList.remove('is-open');
+      });
+      document.getElementById('reset-confirm-btn').addEventListener('click', () => {
+        state.completed = {};
+        state.nov27Seeded = true;
+        saveState();
+        renderAll();
+        els.resetConfirmBox.classList.remove('is-open');
+        setDataStatus('تم مسح جميع علامات الإنجاز والبدء من الصفر.', false);
+      });
+
+      // Responsive re-render when crossing 960px breakpoint
+      let lastWasNarrow = window.innerWidth < 960;
+      window.addEventListener('resize', () => {
+        const nowNarrow = window.innerWidth < 960;
+        if (nowNarrow !== lastWasNarrow) {
+          lastWasNarrow = nowNarrow;
+          renderAll();
+        }
+      });
+
+      /* =======================================================================
+         12. SERVICE WORKER REGISTRATION & BOOTSTRAP
+      ======================================================================= */
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      loadState();
+      renderAll();
+      initSmartPwaButtons();
+      setInterval(tickCairoClock, 1000);
+    })();
+  </script>
+</body>
+</html>
